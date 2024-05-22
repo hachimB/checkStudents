@@ -1,38 +1,38 @@
-import React from 'react';
-import { useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import io from 'socket.io-client';
-import { StyleSheet, Text, View } from 'react-native';
-const socket = io.connect('http://192.168.66.248:8000')
+import React from "react";
+import 'react-native-gesture-handler';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 
+import HomeStudents from './Screens/homeStudents';
+import HomeProfessors from './Screens/homeProfessors';
+import ConnectionProfessors from './Screens/connectionProfessors';
+import ConnectionStudents from './Screens/connectionStudents';
+import InscriptionStudents from './Screens/inscriptionStudents';
+import InscriptionProfessors from './Screens/inscriptionProfessors';
+import UsersDetails from './Screens/usersDetails';
+import AllUsers from './Screens/allUsers';
+import AllUsersConnected from './Screens/allUsersConnected';
+import StatusConnection from './Screens/statusConnection';
 
-export default function App() {
+const Stack = createStackNavigator();
 
-  useEffect(() => {
-    // Listen for disconnection event
-    socket.on('disconnect', () => {
-      console.log('A user is disconnected');
-    });
-
-    return () => {
-      socket.off('disconnect');
-    };
-  }, []);
-
-
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Our project</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={StatusConnection} />
+        <Stack.Screen name="HomeStudents" component={HomeStudents} />
+        <Stack.Screen name="HomeProfessors" component={HomeProfessors} />
+        <Stack.Screen name="ConnectionStudents" component={ConnectionStudents} />
+        <Stack.Screen name="ConnectionProfessors" component={ConnectionProfessors} />
+        <Stack.Screen name="InscriptionStudents" component={InscriptionStudents} />
+        <Stack.Screen name="InscriptionProfessors" component={InscriptionProfessors} />
+        <Stack.Screen name="UsersDetails" component={UsersDetails} />
+        <Stack.Screen name="AllUsers" component={AllUsers} />
+        <Stack.Screen name="AllUsersConnected" component={AllUsersConnected} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'teal',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
