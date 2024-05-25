@@ -19,7 +19,8 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      {/* <Stack.Navigator initialRouteName="Home"> */}
+      <Stack.Navigator initialRouteName="AllUsers">
         <Stack.Screen name="Home" component={StatusConnection} />
         <Stack.Screen name="HomeStudents" component={HomeStudents} />
         <Stack.Screen name="HomeProfessors" component={HomeProfessors} />
