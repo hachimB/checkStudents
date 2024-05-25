@@ -4,10 +4,10 @@ import uuid from 'react-native-uuid';
 
 
 const data = [
-  { id: uuid.v4(), image: require('../images/coffee1.jpg'), name: 'Babacar', program: ' ISI '},
-  { id: uuid.v4(), image: require('../images/coffee2.jpg'), name: 'Franck', program: ' ISI '},
-  { id: uuid.v4(), image: require('../images/coffee3.jpg'), name: 'Astrel', program: 'ISI'},
-  { id: uuid.v4(), image: require('../images/coffee4.jpg') , name: 'Hachim', program: 'ISI'},
+  { id: uuid.v4(), image: require('../Assets/coffee1.jpg'), name: 'Babacar', program: ' ISI '},
+  { id: uuid.v4(), image: require('../Assets/coffee2.jpg'), name: 'Franck', program: ' ISI '},
+  { id: uuid.v4(), image: require('../Assets/coffee3.jpg'), name: 'Astrel', program: 'ISI'},
+  { id: uuid.v4(), image: require('../Assets/coffee4.jpg') , name: 'Hachim', program: 'ISI'},
   // other data items...
 ];
 
