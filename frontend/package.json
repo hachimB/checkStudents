@@ -12,8 +12,10 @@
     "@expo/vector-icons": "^14.0.2",
     "@react-native-masked-view/masked-view": "^0.3.1",
     "@react-navigation/stack": "^6.3.29",
+    "@types/react": "~18.2.79",
     "expo": "~51.0.8",
     "expo-status-bar": "~1.12.1",
+    "firebase": "^10.12.1",
     "react": "18.2.0",
     "react-native": "0.74.1",
     "react-native-calendars": "^1.1305.0",
@@ -22,8 +24,7 @@
     "react-native-size-matters": "^0.4.2",
     "react-native-uuid": "^2.0.2",
     "socket.io-client": "^4.7.5",
-    "typescript": "~5.3.3",
-    "@types/react": "~18.2.79"
+    "typescript": "~5.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

@@ -1,11 +1,56 @@
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, Image, ScrollView } from 'react-native';
-import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons/build/Icons';
 import { Ms, Vs, rS } from '../Responsive/responsive';
+import { getFirestore, collection, getDocs, addDoc } from 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { doc, setDoc } from "firebase/firestore"; 
+import {db} from '../Config/firebaseConfig';
+import { getAnalytics, isSupported } from "firebase/analytics";
 
 const InscriptionStudents = () => {
   const [selectedValue, setSelectedValue] = useState();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [programChoice, setProgramChoice] = useState('');
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const db = getFirestore();
+      const data = await getDocs(collection(db, "students"));
+      setData(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+    }
+    fetchData();
+  }, []);
+
+  const handleSubmit = async () => {
+  if (!firstName || !lastName || !selectedValue || !password || !email) {
+    Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
+    return;
+  }
+
+  try {
+    await addDoc(collection(getFirestore(), "students"), {
+      firstName: firstName,
+      lastName: lastName,
+      programChoice: selectedValue,
+      password: password,
+      email: email,
+    });
+    Alert.alert('Success', 'Inscription réussie.');
+    setFirstName('');
+    setLastName('');
+    setSelectedValue(null);
+    setPassword('');
+    setEmail('');
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+};
 
   return (
     <ScrollView>
@@ -20,11 +65,14 @@ const InscriptionStudents = () => {
           }} source={require('../Assets/checkStudents.jpg')} />
         </View>
         <View style={{ flex: 1,top: rS(130), left: rS(10) }}>
-          <TextInput style={styles.container} placeholder='Nom'/>
+          <TextInput style={styles.container} placeholder='First Name' value={firstName} 
+          onChangeText={setFirstName} />
           <Entypo style={{ position: 'absolute', left: rS(290), top: Vs(77), fontSize: 14 }} name='user' />
-          <TextInput style={styles.container} placeholder='Prénom' />
+          <TextInput style={styles.container} placeholder='Last Name' value={lastName} 
+          onChangeText={setLastName} />
           <Entypo style={{ position: 'absolute', left: rS(290), top: Vs(144), fontSize: 14 }} name='user' />
-          <View style={styles.container}>
+          <TextInput style={styles.container} placeholder='program choice' value={programChoice} onChangeText={setProgramChoice}/>
+          {/* <View style={styles.container}>
             <Picker
               selectedValue={selectedValue}
               onValueChange={(itemValue, itemIndex) =>
@@ -36,14 +84,17 @@ const InscriptionStudents = () => {
                 marginTop: Vs(-7),
                 marginLeft: rS(-12)
               }}>
-              <Picker.Item style={{fontFamily:'serif'}} label="Choix du filière" value="Choix du filière" />
+              <Picker.Item style={{fontFamily:'serif'}} label="Program Choice" value={programChoice} onChangeText={setProgramChoice}/>
               <Picker.Item label="AI" value="AI" />
               <Picker.Item label="ISI" value="ISI" />
               <Picker.Item label="MIL" value="MIL" />
               <Picker.Item label="CS" value="CS" />
             </Picker>
-          </View>
-          <TextInput style={styles.container} placeholder='E_mail' />
+          </View> */}
+          <TextInput style={styles.container} placeholder='Email' value={email} onChangeText={setEmail}/>
+
+          <TextInput style={styles.container} placeholder='password' value={password} onChangeText={setPassword} secureTextEntry={true}/>
+
           <MaterialCommunityIcons name='email-multiple-outline'
             style={{
               position: 'absolute',
@@ -74,7 +125,7 @@ const InscriptionStudents = () => {
                 justifyContent: 'center',
                 textAlign: 'center',
                 marginTop: Vs(7),
-              }}>Inscription</Text></TouchableOpacity>
+              }} onPress={handleSubmit}>Inscription</Text></TouchableOpacity>
         </View>
 
         <Text style={{
