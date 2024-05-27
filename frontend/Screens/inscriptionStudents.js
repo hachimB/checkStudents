@@ -44,7 +44,7 @@ const InscriptionStudents = () => {
     Alert.alert('Success', 'Inscription réussie.');
     setFirstName('');
     setLastName('');
-    setSelectedValue(null);
+    setProgramChoice(null);
     setPassword('');
     setEmail('');
   } catch (e) {
