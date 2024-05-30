@@ -13,6 +13,7 @@ import UsersDetails from './Screens/usersDetails';
 import AllUsers from './Screens/allUsers';
 import AllUsersConnected from './Screens/allUsersConnected';
 import StatusConnection from './Screens/statusConnection';
+import DrawerProfessors from './Screens/drawerProfessors';
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,7 @@ const App = () => {
         <Stack.Screen name="UsersDetails" component={UsersDetails} />
         <Stack.Screen name="AllUsers" component={AllUsers} />
         <Stack.Screen name="AllUsersConnected" component={AllUsersConnected} />
+        <Stack.Screen name="DrawerProfessors" component={DrawerProfessors} />
       </Stack.Navigator>
     </NavigationContainer>
   );

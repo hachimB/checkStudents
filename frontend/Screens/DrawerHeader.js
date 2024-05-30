@@ -6,7 +6,7 @@ const DrawerHeader = (props) => (
   <DrawerContentScrollView {...props}>
     <View style={styles.header}>
       <View style={styles.profileCircle}>
-        <Image source={require('../Assets/image6.jpg')} style={styles.profileImage} />
+        <Image source={require('../Assets/checkStudents.jpg')} style={styles.profileImage} />
       </View>
       <Text style={styles.text}>Faith Gaiciumia</Text>
     </View>

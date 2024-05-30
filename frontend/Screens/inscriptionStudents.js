@@ -1,176 +1,204 @@
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, ScrollView, SafeAreaView } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { Picker } from '@react-native-picker/picker';
-import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons/build/Icons';
-import { Ms, Vs, rS } from '../Responsive/responsive';
+import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { getFirestore, collection, getDocs, addDoc } from 'firebase/firestore';
+import { Picker } from '@react-native-picker/picker';
 import { initializeApp } from 'firebase/app';
 import { doc, setDoc } from "firebase/firestore"; 
 import {db} from '../Config/firebaseConfig';
 import { getAnalytics, isSupported } from "firebase/analytics";
 
-const InscriptionStudents = () => {
-  const [selectedValue, setSelectedValue] = useState();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [programChoice, setProgramChoice] = useState('');
-  const [data, setData] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const db = getFirestore();
-      const data = await getDocs(collection(db, "students"));
-      setData(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-    }
-    fetchData();
-  }, []);
-
-  const handleSubmit = async () => {
-  if (!firstName || !lastName || !programChoice || !password || !email) {
-    Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
-    return;
-  }
-
-  try {
-    await addDoc(collection(getFirestore(), "students"), {
-      firstName: firstName,
-      lastName: lastName,
-      programChoice: programChoice,
-      password: password,
-      email: email,
-    });
-    Alert.alert('Success', 'Inscription réussie.');
-    setFirstName('');
-    setLastName('');
-    setProgramChoice(null);
-    setPassword('');
-    setEmail('');
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
+  const InscriptionStudents = () => {
+      const [selectedValue, setSelectedValue] = useState();
+      const [firstName, setFirstName] = useState('');
+      const [lastName, setLastName] = useState('');
+      const [password, setPassword] = useState('');
+      const [email, setEmail] = useState('');
+      const [programChoice, setProgramChoice] = useState('');
+      const [data, setData] = useState([]);
+      const cursorColor = '#7e7e7e';
+    
+      useEffect(() => {
+        const fetchData = async () => {
+          const db = getFirestore();
+          const data = await getDocs(collection(db, "students"));
+          setData(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+        }
+        fetchData();
+      }, []);
+    
+      const handleSubmit = async () => {
+      if (!firstName || !lastName || !programChoice || !password || !email) {
+        Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
+        return;
+      }
+    
+      try {
+        await addDoc(collection(getFirestore(), "students"), {
+          firstName: firstName,
+          lastName: lastName,
+          programChoice: programChoice,
+          password: password,
+          email: email,
+        });
+        Alert.alert('Success', 'Inscription réussie.');
+        setFirstName('');
+        setLastName('');
+        setProgramChoice(null);
+        setPassword('');
+        setEmail('');
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    };
+    
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.stickyContainer}>
+        <View style={styles.imageContainer}>
+          <Image source={require('../Assets/checkStudents.jpg')} style={styles.logo} />
+        </View>
+      </View>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.formContainer}>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.textInput}
+              placeholder='First Name'
+              value={firstName}
+              onChangeText={setFirstName}
+              selectionColor={cursorColor}
+            />
+            <Entypo name='user' style={styles.icon} />
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.textInput}
+              placeholder='Last Name'
+              value={lastName}
+              onChangeText={setLastName}
+              selectionColor={cursorColor}
+            />
+            <Entypo name='user' style={styles.icon} />
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.textInput}
+              placeholder='Program Choice'
+              value={programChoice}
+              onChangeText={setProgramChoice}
+              selectionColor={cursorColor}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.textInput}
+              placeholder='Email'
+              value={email}
+              onChangeText={setEmail}
+              selectionColor={cursorColor}
+            />
+            <MaterialCommunityIcons name='email-multiple-outline' style={styles.icon} />
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.textInput}
+              placeholder='Password'
+              value={password}
+              onChangeText={setPassword}
+              selectionColor={cursorColor}
+              secureTextEntry
+            />
+          </View>
+          
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <Text style={styles.buttonText}>Inscription</Text>
+          </TouchableOpacity>
+        </View>
+     
+      <View style={styles.copyRight}>
+        <Text style={styles.bottomText}>Tous Droit Reservés</Text>
+        <Text style={styles.bottomText}>Provided By ThingsApp</Text>
+        <Text style={styles.bottomText}>Copyright &#169; 2024</Text>
+      </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
 };
 
-  return (
-    <ScrollView>
-      <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', left: rS(-9), backgroundColor:'white'}}>
-        <View style={{ flex: 1 }}>
-          <Image style={{
-            width: rS(100),
-            height: Vs(100),
-            top: Vs(80),
-            left: 8,
-            backgroundColor: 'white'
-          }} source={require('../Assets/checkStudents.jpg')} />
-        </View>
-        <View style={{ flex: 1,top: rS(130), left: rS(10) }}>
-          <TextInput style={styles.container} placeholder='First Name' value={firstName} 
-          onChangeText={text => setFirstName(text)} />
-          <Entypo style={{ position: 'absolute', left: rS(290), top: Vs(77), fontSize: 14 }} name='user' />
-          <TextInput style={styles.container} placeholder='Last Name' value={lastName} 
-          onChangeText={text => setLastName(text)} />
-          <Entypo style={{ position: 'absolute', left: rS(290), top: Vs(144), fontSize: 14 }} name='user' />
-          <TextInput style={styles.container} placeholder='program choice' value={programChoice} onChangeText={text => setProgramChoice(text)} />
-          {/* <View style={styles.container}>
-            <Picker
-              selectedValue={selectedValue}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedValue(itemValue)
-              }
-              style={{
-                height: Vs(50),
-                width: rS(300),
-                marginTop: Vs(-7),
-                marginLeft: rS(-12)
-              }}>
-              <Picker.Item style={{fontFamily:'serif'}} label="Program Choice" value={programChoice} onChangeText={setProgramChoice}/>
-              <Picker.Item label="AI" value="AI" />
-              <Picker.Item label="ISI" value="ISI" />
-              <Picker.Item label="MIL" value="MIL" />
-              <Picker.Item label="CS" value="CS" />
-            </Picker>
-          </View> */}
-          <TextInput style={styles.container} placeholder='Email' value={email} onChangeText={text => setEmail(text)} />
-
-          <TextInput style={styles.container} placeholder='password' value={password} onChangeText={text => setPassword(text)}  secureTextEntry={true}/>
-
-          <MaterialCommunityIcons name='email-multiple-outline'
-            style={{
-              position: 'absolute',
-              left: rS(290),
-              top: Vs(263),
-              fontSize: 14
-            }} />
-        </View>
-
-        <View
-          style={{
-            height: Vs(47),
-            width: rS(300),
-            color: 'white',
-            backgroundColor: 'red',
-            marginLeft: 19,
-            marginTop: Vs(250),
-            borderRadius: 5,
-          }}>
-
-          <TouchableOpacity >
-            <Text
-              style={{
-                fontFamily: 'serif',
-                color: 'white',
-                fontSize: Ms(23),
-                fontWeight: 'bold',
-                justifyContent: 'center',
-                textAlign: 'center',
-                marginTop: Vs(7),
-              }} onPress={handleSubmit}>Inscription</Text></TouchableOpacity>
-        </View>
-
-        <Text style={{
-          textAlign: 'center',
-          marginLeft: 10,
-          marginTop: 7,
-          fontFamily:'serif',
-          fontWeight: 'bold',
-          fontSize: Ms(14)
-        }}>Tout droit réservés {'\n'}provited byThingsApp{'\n'} copyright@2024
-        </Text>
-      </View>
-    </ScrollView>
-  )
-}
 const styles = StyleSheet.create({
   container: {
-    fontFamily:'serif',
+    flex: 1,
     backgroundColor: 'white',
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  stickyContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
+    zIndex: 1,
+    alignItems: 'center',
+  },
+  imageContainer: {
+    alignItems: 'center',
+  },
+  logo: {
+    width: 200,
+    height: 200,
+  },
+  formContainer: {
+    width: '100%',
+    alignItems: 'center',
+    paddingTop: 220, // Adjusted to ensure form starts below the sticky header
+  },
+  inputContainer: {
+    width: '90%',
+    marginBottom: 10,
     position: 'relative',
-    top: Vs(51),
-    fontSize: 17,
-    fontWeight: 'bold',
-    margin: 10,
-    paddingLeft: rS(12),
-    marginHorizontal: 20,
-    height: Vs(46),
-    width: rS(300),
-    borderRadius: 5,
+  },
+  textInput: {
+    width: '100%',
+    height: 40,
     borderWidth: 1,
-    borderColor: 'red',
-    shadowOpacity: 0.07,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 10,
-      height: 10,
-    },
-
-    button: {
-      color: 'white',
-    },
-    placeholder: {
-      marginLeft: 40,
-    }
-  }
+    borderColor: '#E91212',
+    borderRadius: 5,
+    paddingHorizontal: 8,
+  },
+  icon: {
+    position: 'absolute',
+    right: 10,
+    top: 10,
+    fontSize: 20,
+    color: '#E91212',
+  },
+  button: {
+    width: '90%',
+    height: 40,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  copyRight: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  bottomText: {
+    fontSize: 14,
+    textAlign: 'center',
+  },
 });
 
 export default InscriptionStudents;

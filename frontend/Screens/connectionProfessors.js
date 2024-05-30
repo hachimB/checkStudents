@@ -6,7 +6,7 @@ const { width, height } = Dimensions.get('window');
 import DrawerProfessors from './drawerProfessors';
 
 
-const ConnectionStudents = () => {
+const ConnectionProfessors = () => {
   const navigation = useNavigation();
   const navigateToHomeProfessors = () => {
     navigation.navigate('DrawerProfessors'); 
@@ -14,7 +14,7 @@ const ConnectionStudents = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Text style={{textAlign:'center',fontSize:18,fontWeight:'bold'}}>Connection Students Screen</Text>
+      <Text style={{textAlign:'center',fontSize:18,fontWeight:'bold'}}>Professors authentication</Text>
       <ImageBackground source={require('../Assets/connectionProfessors.png')} style={styles.backgroundStudent}>
         <View style={styles.overlay}>
           <TextInput style={styles.input} placeholder="Username" placeholderTextColor="#ccc" />
@@ -74,4 +74,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ConnectionStudents;
+export default ConnectionProfessors;

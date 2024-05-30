@@ -5,7 +5,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 
-const UserDetails = () => {
+const UsersDetails = () => {
   const defaultValue1 = "18";
   const defaultValue2 = "16";
   const defaultValue3 = "15";
@@ -21,7 +21,7 @@ const UserDetails = () => {
   return (
     <View style={styles.container}>
       <View style={styles.containerProfile}>
-        <Image source={require('../Assets/image6.jpg')} style={styles.image} />
+        <Image source={require('../Assets/checkStudents.jpg')} style={styles.image} />
         <Text style={styles.text}>NOM : NGOUBOUNKOU</Text>
         <Text style={styles.text}>PRENOMS : Franck Herve</Text>
         <Text style={styles.text}>Filière : 3ISI</Text>
@@ -103,4 +103,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default UserDetails;
+export default UsersDetails;
