@@ -28,7 +28,7 @@ const InscriptionStudents = () => {
   }, []);
 
   const handleSubmit = async () => {
-  if (!firstName || !lastName || !selectedValue || !password || !email) {
+  if (!firstName || !lastName || !programChoice || !password || !email) {
     Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
     return;
   }
@@ -37,14 +37,14 @@ const InscriptionStudents = () => {
     await addDoc(collection(getFirestore(), "students"), {
       firstName: firstName,
       lastName: lastName,
-      programChoice: selectedValue,
+      programChoice: programChoice,
       password: password,
       email: email,
     });
     Alert.alert('Success', 'Inscription réussie.');
     setFirstName('');
     setLastName('');
-    setSelectedValue(null);
+    setProgramChoice(null);
     setPassword('');
     setEmail('');
   } catch (e) {
@@ -66,12 +66,12 @@ const InscriptionStudents = () => {
         </View>
         <View style={{ flex: 1,top: rS(130), left: rS(10) }}>
           <TextInput style={styles.container} placeholder='First Name' value={firstName} 
-          onChangeText={setFirstName} />
+          onChangeText={text => setFirstName(text)} />
           <Entypo style={{ position: 'absolute', left: rS(290), top: Vs(77), fontSize: 14 }} name='user' />
           <TextInput style={styles.container} placeholder='Last Name' value={lastName} 
-          onChangeText={setLastName} />
+          onChangeText={text => setLastName(text)} />
           <Entypo style={{ position: 'absolute', left: rS(290), top: Vs(144), fontSize: 14 }} name='user' />
-          <TextInput style={styles.container} placeholder='program choice' value={programChoice} onChangeText={setProgramChoice}/>
+          <TextInput style={styles.container} placeholder='program choice' value={programChoice} onChangeText={text => setProgramChoice(text)} />
           {/* <View style={styles.container}>
             <Picker
               selectedValue={selectedValue}
@@ -91,9 +91,9 @@ const InscriptionStudents = () => {
               <Picker.Item label="CS" value="CS" />
             </Picker>
           </View> */}
-          <TextInput style={styles.container} placeholder='Email' value={email} onChangeText={setEmail}/>
+          <TextInput style={styles.container} placeholder='Email' value={email} onChangeText={text => setEmail(text)} />
 
-          <TextInput style={styles.container} placeholder='password' value={password} onChangeText={setPassword} secureTextEntry={true}/>
+          <TextInput style={styles.container} placeholder='password' value={password} onChangeText={text => setPassword(text)}  secureTextEntry={true}/>
 
           <MaterialCommunityIcons name='email-multiple-outline'
             style={{
