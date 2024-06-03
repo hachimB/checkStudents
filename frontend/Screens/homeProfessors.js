@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, Image, SafeAreaView, ImageBackground, StyleSheet, TextInput, ScrollView ,TouchableOpacity } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import ConnectionStudents from './connectionStudents' ;
-import ConnectionProfessors from './connectionProfessors';
+// import ConnectionStudents from './connectionStudents' ;
+// import ConnectionProfessors from './connectionProfessors';
 import UsersDetails from './usersDetails';
 import { useNavigation } from '@react-navigation/native';
 

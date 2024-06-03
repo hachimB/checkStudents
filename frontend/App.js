@@ -14,6 +14,7 @@ import AllUsers from './Screens/allUsers';
 import AllUsersConnected from './Screens/allUsersConnected';
 import StatusConnection from './Screens/statusConnection';
 import DrawerProfessors from './Screens/drawerProfessors';
+import Home from './Screens/home';
 
 const Stack = createStackNavigator();
 
@@ -21,7 +22,8 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="InscriptionStudents">
-        <Stack.Screen name="Home" component={StatusConnection} />
+        <Stack.Screen name="StatusConnection" component={StatusConnection} />
+        <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="HomeStudents" component={HomeStudents} />
         <Stack.Screen name="HomeProfessors" component={HomeProfessors} />
         <Stack.Screen name="ConnectionStudents" component={ConnectionStudents} />

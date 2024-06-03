@@ -1,58 +1,111 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, ScrollView, SafeAreaView } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, ScrollView, SafeAreaView } from 'react-native';
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
-import { getFirestore, collection, getDocs, addDoc } from 'firebase/firestore';
-import { Picker } from '@react-native-picker/picker';
-import { initializeApp } from 'firebase/app';
-import { doc, setDoc } from "firebase/firestore"; 
-import {db} from '../Config/firebaseConfig';
-import { getAnalytics, isSupported } from "firebase/analytics";
+import * as ImagePicker from 'expo-image-picker';
+import { getFirestore, collection, addDoc, onSnapshot } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { auth, db } from '../Config/firebaseConfig'; // Ensure auth and db are properly exported from your firebaseConfig
 
+const InscriptionStudents = () => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [programChoice, setProgramChoice] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [data, setData] = useState([]);
+  const [statusConnection, setStatusConnection] = useState('disconnected');
+  const cursorColor = '#7e7e7e';
 
-  const InscriptionStudents = () => {
-      const [selectedValue, setSelectedValue] = useState();
-      const [firstName, setFirstName] = useState('');
-      const [lastName, setLastName] = useState('');
-      const [password, setPassword] = useState('');
-      const [email, setEmail] = useState('');
-      const [programChoice, setProgramChoice] = useState('');
-      const [data, setData] = useState([]);
-      const cursorColor = '#7e7e7e';
-    
-      useEffect(() => {
-        const fetchData = async () => {
-          const db = getFirestore();
-          const data = await getDocs(collection(db, "students"));
-          setData(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-        }
-        fetchData();
-      }, []);
-    
-      const handleSubmit = async () => {
-      if (!firstName || !lastName || !programChoice || !password || !email) {
-        Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
-        return;
-      }
-    
-      try {
-        await addDoc(collection(getFirestore(), "students"), {
-          firstName: firstName,
-          lastName: lastName,
-          programChoice: programChoice,
-          password: password,
-          email: email,
-        });
-        Alert.alert('Success', 'Inscription réussie.');
-        setFirstName('');
-        setLastName('');
-        setProgramChoice(null);
-        setPassword('');
-        setEmail('');
-      } catch (e) {
-        console.error("Error adding document: ", e);
-      }
+  useEffect(() => {
+    const fetchData = () => {
+      const unsubscribe = onSnapshot(collection(getFirestore(), "students"), (snapshot) => {
+        setData(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+      });
+      return () => unsubscribe();
     };
-    
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setStatusConnection('connected');
+      } else {
+        setStatusConnection('disconnected');
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const pickImage = async () => {
+    // Ask the user for the permission to access the media library 
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      Alert.alert('Error', 'Permission to access camera roll is required!');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!firstName || !lastName || !programChoice || !password || !email || !selectedImage) {
+      Alert.alert('Error', 'Fill all fields');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert('Error', 'Enter a valid email');
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      await addDoc(collection(getFirestore(), "students"), {
+        uid: user.uid,
+        firstName: firstName,
+        lastName: lastName,
+        programChoice: programChoice,
+        email: email,
+        imageUrl: selectedImage,
+        statusConnection: statusConnection
+      });
+
+      Alert.alert('Success', 'Registration successful.');
+      setFirstName('');
+      setLastName('');
+      setProgramChoice('');
+      setPassword('');
+      setEmail('');
+      setSelectedImage(null);
+    } catch (e) {
+      console.error("Error during registration: ", e);
+      if (e.code === 'auth/email-already-in-use') {
+        Alert.alert('Error', 'The email address is already in use by another account.');
+      } else if (e.code === 'auth/invalid-email') {
+        Alert.alert('Error', 'The email address is not valid.');
+      } else if (e.code === 'auth/weak-password') {
+        Alert.alert('Error', 'The password is too weak.');
+      } else {
+        Alert.alert('Error', 'An error occurred during registration.');
+      }
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.stickyContainer}>
@@ -62,6 +115,13 @@ import { getAnalytics, isSupported } from "firebase/analytics";
       </View>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.formContainer}>
+          <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
+            {selectedImage ? (
+              <Image source={{ uri: selectedImage }} style={styles.selectedImage} />
+            ) : (
+              <Text style={styles.imagePickerText}>Pick an image</Text>
+            )}
+          </TouchableOpacity>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.textInput}
@@ -117,11 +177,11 @@ import { getAnalytics, isSupported } from "firebase/analytics";
           </TouchableOpacity>
         </View>
      
-      <View style={styles.copyRight}>
-        <Text style={styles.bottomText}>Tous Droit Reservés</Text>
-        <Text style={styles.bottomText}>Provided By ThingsApp</Text>
-        <Text style={styles.bottomText}>Copyright &#169; 2024</Text>
-      </View>
+        <View style={styles.copyRight}>
+          <Text style={styles.bottomText}>Tous Droit Reservés</Text>
+          <Text style={styles.bottomText}>Provided By ThingsApp</Text>
+          <Text style={styles.bottomText}>Copyright &#169; 2024</Text>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -157,6 +217,25 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     paddingTop: 220, // Adjusted to ensure form starts below the sticky header
+  },
+  imagePicker: {
+    width: '90%',
+    height: 150,
+    borderColor: '#E91212',
+    borderWidth: 1,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  imagePickerText: {
+    color: '#7e7e7e',
+    fontSize: 18,
+  },
+  selectedImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 5,
   },
   inputContainer: {
     width: '90%',
