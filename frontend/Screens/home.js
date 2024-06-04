@@ -2,6 +2,9 @@ import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import CarouselCustom from './CarouselCustom';
+
+
 
 const Home = () => {
     const navigation = useNavigation();
@@ -15,18 +18,19 @@ const Home = () => {
                     onPress={() => navigation.navigate('inscriptionStudents')}>
                         <Text> Sign In</Text>
                     </TouchableOpacity>
-
                     <TouchableOpacity 
                     style={{justifyContent:'center',alignItems:'center',height: 40, width: 90, borderRadius:5, borderWidth: 1, borderColor: '#D9D9D9'}}>
                         <Text> Sign Up</Text>
                     </TouchableOpacity>
                 </View>
             </View>
+            <CarouselCustom />
             <View style={{flex:1,flexDirection:'column',justifyContent:'flex-end',  alignItems:'center'}}>
                 <Text>Tous Droits Reservés</Text>
                 <Text>Provided By ThingsApp</Text>
                 <Text>copyright 2024</Text>
             </View>
+           
         </SafeAreaView>
 
     )
