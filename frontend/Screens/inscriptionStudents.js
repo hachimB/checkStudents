@@ -4,6 +4,7 @@ import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { getFirestore, collection, addDoc, onSnapshot } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { auth, db } from '../Config/firebaseConfig'; // Ensure auth and db are properly exported from your firebaseConfig
 
 const InscriptionStudents = () => {
@@ -39,7 +40,6 @@ const InscriptionStudents = () => {
   }, []);
 
   const pickImage = async () => {
-    // Ask the user for the permission to access the media library 
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
@@ -75,23 +75,50 @@ const InscriptionStudents = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      await addDoc(collection(getFirestore(), "students"), {
-        uid: user.uid,
-        firstName: firstName,
-        lastName: lastName,
-        programChoice: programChoice,
-        email: email,
-        imageUrl: selectedImage,
-        statusConnection: statusConnection
-      });
+      // Create a reference to the file in Firebase Storage
+      const storage = getStorage();
+      const storageRef = ref(storage, `images/${user.uid}`);
+      
+      // Convert the image URI to a Blob
+      const response = await fetch(selectedImage);
+      const blob = await response.blob();
 
-      Alert.alert('Success', 'Registration successful.');
-      setFirstName('');
-      setLastName('');
-      setProgramChoice('');
-      setPassword('');
-      setEmail('');
-      setSelectedImage(null);
+      // Upload the image to Firebase Storage
+      const uploadTask = uploadBytesResumable(storageRef, blob);
+
+      // Monitor the upload task to handle progress, error, and completion
+      uploadTask.on('state_changed', 
+        (snapshot) => {
+          // You can use this function to monitor the upload progress
+        }, 
+        (error) => {
+          // Handle unsuccessful uploads
+          console.error("Error uploading image: ", error);
+        }, 
+        async () => {
+          // Handle successful uploads on complete
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          
+          // Save the download URL in Firestore
+          await addDoc(collection(getFirestore(), "students"), {
+            uid: user.uid,
+            firstName: firstName,
+            lastName: lastName,
+            programChoice: programChoice,
+            email: email,
+            imageUrl: downloadURL, // Store the download URL instead of the local URI
+            statusConnection: statusConnection
+          });
+
+          Alert.alert('Success', 'Registration successful.');
+          setFirstName('');
+          setLastName('');
+          setProgramChoice('');
+          setPassword('');
+          setEmail('');
+          setSelectedImage(null);
+        }
+      );
     } catch (e) {
       console.error("Error during registration: ", e);
       if (e.code === 'auth/email-already-in-use') {
