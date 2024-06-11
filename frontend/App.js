@@ -26,7 +26,7 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeStudents">
+      <Stack.Navigator initialRouteName="HomeProfessors">
         <Stack.Screen name="StatusConnection" component={StatusConnection} />
         <Stack.Screen name="AccueilTest" component={AccueilTest} />
         <Stack.Screen name="SignUp" component={SignUp} />
