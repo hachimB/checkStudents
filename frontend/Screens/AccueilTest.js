@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, AppState } from 'react-native';
+import { View, Text, StyleSheet, AppState, Image } from 'react-native';
 import { auth, db } from '../Config/firebaseConfig';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
@@ -23,18 +23,20 @@ const HomePage = () => {
         if (nextAppState === 'active') {
           // User is online
           await updateDoc(userStatusRef, { statusConnection: 'online' });
+          fetchUserInfo(); // Fetch user info when the app comes to the foreground
         } else {
           // User is offline
           await updateDoc(userStatusRef, { statusConnection: 'offline' });
+          setUserInfo(null); // Clear user info when the app goes to the background
         }
       }
     };
 
     fetchUserInfo(); // Fetch user info when the component mounts
-    AppState.addEventListener('change', handleAppStateChange);
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
 
     return () => {
-      AppState.removeEventListener('change', handleAppStateChange);
+      subscription.remove(); // Clean up the subscription on component unmount
     };
   }, []);
 
@@ -46,7 +48,14 @@ const HomePage = () => {
           <Text>Email: {userInfo.email}</Text>
           <Text>Program Choice: {userInfo.programChoice}</Text>
           <Text>Status: {userInfo.statusConnection}</Text>
-          <Text>Image URL: {userInfo.imageUrl}</Text>
+          {userInfo.imageUrl ? (
+            <Image
+              source={{ uri: userInfo.imageUrl }}
+              style={styles.image}
+            />
+          ) : (
+            <Text>No image available</Text>
+          )}
         </>
       ) : (
         <Text>Loading user information...</Text>
@@ -62,7 +71,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
   },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginTop: 16,
+  },
 });
 
 export default HomePage;
-
