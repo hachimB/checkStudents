@@ -10,9 +10,9 @@ const Home = () => {
     const navigation = useNavigation();
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <ImageBackground source={require('../Assets/checkStudents.jpg')}  style={{width:'100%',height:180,}} />
-            <View style={{flex:1,flexDirection:'row', justifyContent:'flex-end'}}>
-                <View style={{flexDirection: 'row', gap: 30 ,marginTop:10, }}>
+            <ImageBackground source={require('../Assets/checkStudents.jpg')}  style={{width:'100%',height:250,}} />
+            <View style={{flex:1, justifyContent:'flex-end'}}>
+                <View style={{alignSelf:'flex-end',flexDirection: 'row', gap: 30 ,marginTop:10, }}>
                     <TouchableOpacity 
                     style={{ justifyContent:'center',alignItems:'center',height: 40, width: 90, borderRadius:5, borderWidth: 1, borderColor: '#D9D9D9'}}
                     onPress={() => navigation.navigate('inscriptionStudents')}>
@@ -23,8 +23,9 @@ const Home = () => {
                         <Text> Sign Up</Text>
                     </TouchableOpacity>
                 </View>
+                <CarouselCustom />
             </View>
-            <CarouselCustom />
+         
             <View style={{flex:1,flexDirection:'column',justifyContent:'flex-end',  alignItems:'center'}}>
                 <Text>Tous Droits Reservés</Text>
                 <Text>Provided By ThingsApp</Text>
