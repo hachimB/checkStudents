@@ -14,10 +14,10 @@ const images = [
 const CarouselCustom = () => {
     const width = Dimensions.get('window').width;
     return (
-        <View style={{ flex: 1 ,justifyContent:'center',alignItems:'center', }}>
+        <View style={{ flex: 1 ,alignItems:'center', paddingTop:40}}>
             <Carousel
                 loop
-                width={300}
+                width={310}
                 height={190}
                 autoPlay={true}
                 data={images}
