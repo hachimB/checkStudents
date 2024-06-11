@@ -15,15 +15,22 @@ import AllUsersConnected from './Screens/allUsersConnected';
 import StatusConnection from './Screens/statusConnection';
 import DrawerProfessors from './Screens/drawerProfessors';
 import Home from './Screens/home';
+import SignUp from "./Screens/Essai";
+import AccueilTest from './Screens/AccueilTest'
+
+
+
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="InscriptionStudents">
+      <Stack.Navigator initialRouteName="SignUp">
         <Stack.Screen name="StatusConnection" component={StatusConnection} />
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="AccueilTest" component={AccueilTest} />
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="Home" component={Home} options={{headerShown : false}}  />
         <Stack.Screen name="HomeStudents" component={HomeStudents} />
         <Stack.Screen name="HomeProfessors" component={HomeProfessors} />
         <Stack.Screen name="ConnectionStudents" component={ConnectionStudents} />
