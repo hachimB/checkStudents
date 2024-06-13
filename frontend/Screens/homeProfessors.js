@@ -1,15 +1,50 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, SafeAreaView, ImageBackground, StyleSheet, TextInput, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, Image, SafeAreaView, AppState, ImageBackground, StyleSheet, TextInput, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
-import { db } from '../Config/firebaseConfig';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { auth, db } from '../Config/firebaseConfig';
+import { collection, query, where, onSnapshot, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 
 const HomeProfessors = () => {
+  const [userInfo, setUserInfo] = useState(null);
   const [users, setUsers] = useState([]);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      if (auth.currentUser) {
+        const userRef = doc(db, 'students', auth.currentUser.uid);
+        const userDoc = await getDoc(userRef);
+        if (userDoc.exists()) {
+          setUserInfo(userDoc.data());
+        }
+      }
+    };
+
+    const handleAppStateChange = async (nextAppState) => {
+      if (auth.currentUser) {
+        const userStatusRef = doc(db, 'teachers', auth.currentUser.uid);
+        if (nextAppState === 'active') {
+          // User is online
+          await updateDoc(userStatusRef, { statusConnection: 'online' });
+          fetchUserInfo(); // Fetch user info when the app comes to the foreground
+        } else {
+          // User is offline
+          await updateDoc(userStatusRef, { statusConnection: 'offline' });
+          setUserInfo(null); // Clear user info when the app goes to the background
+        }
+      }
+    };
+
+    fetchUserInfo(); // Fetch user info when the component mounts
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      subscription.remove(); // Clean up the subscription on component unmount
+    };
+  }, []);
 
   useEffect(() => {
     const q = query(collection(db, 'students'), where('statusConnection', '==', 'online'));
@@ -221,4 +256,3 @@ const styles = StyleSheet.create({
 });
 
 export default HomeProfessors;
-

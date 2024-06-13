@@ -1,32 +1,79 @@
-import React from 'react';
-import { View, Text, ImageBackground, TextInput, Dimensions, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ImageBackground, Alert, TextInput, Dimensions, StyleSheet, TouchableOpacity, AppState } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-const { width, height } = Dimensions.get('window');
-import DrawerProfessors from './drawerProfessors';
+import { auth, db } from '../Config/firebaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
 
+const { width, height } = Dimensions.get('window');
 
 const ConnectionProfessors = () => {
   const navigation = useNavigation();
-  const navigateToHomeProfessors = () => {
-    navigation.navigate('DrawerProfessors'); 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    const handleAppStateChange = async (nextAppState) => {
+      if (auth.currentUser) {
+        const userStatusRef = doc(db, 'teachers', auth.currentUser.uid);
+        if (nextAppState === 'active') {
+          await updateDoc(userStatusRef, { statusConnection: 'online' });
+        } else {
+          await updateDoc(userStatusRef, { statusConnection: 'offline' });
+        }
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
+  const handleSignIn = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const { uid } = userCredential.user;
+      const userRef = doc(db, 'teachers', uid);
+      await updateDoc(userRef, {
+        statusConnection: 'online',
+      });
+      navigation.navigate('DrawerProfessors');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Text style={{textAlign:'center',fontSize:18,fontWeight:'bold'}}>Professors authentication</Text>
+      <Text style={{ textAlign: 'center' }}>Professors authentication</Text>
       <ImageBackground source={require('../Assets/connectionProfessors.png')} style={styles.backgroundStudent}>
         <View style={styles.overlay}>
-          <TextInput style={styles.input} placeholder="Username" placeholderTextColor="#ccc" />
-          <TextInput style={styles.input} placeholder="Password" placeholderTextColor="#ccc" secureTextEntry />
-          <TouchableOpacity onPress={navigateToHomeProfessors} style={styles.button}>
+          <TextInput
+            style={styles.input}
+            placeholder="Identifiant"
+            placeholderTextColor="#ccc"
+            onChangeText={setEmail}
+            value={email}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            placeholderTextColor="#ccc"
+            onChangeText={setPassword}
+            value={password}
+            secureTextEntry
+          />
+          <TouchableOpacity onPress={handleSignIn} style={styles.button}>
             <Text style={styles.buttonText}>Connexion</Text>
           </TouchableOpacity>
         </View>
       </ImageBackground>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   backgroundStudent: {
@@ -34,28 +81,26 @@ const styles = StyleSheet.create({
     width: width,
     justifyContent: 'center',
     alignItems: 'center',
-    // borderWidth:2,
-    // borderColor:'red',
   },
   overlay: {
     flex: 1,
-    height:'100%',
-    width:width,
+    height: '100%',
+    width: width,
     position: 'absolute',
     padding: 20,
-    justifyContent:'center',
-    alignItems:'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.7)',
     alignItems: 'center',
- 
   },
   input: {
     width: 300,
     height: 40,
-    borderWidth:2,
-    borderColor:'white',
+    color: 'white',
+    borderWidth: 2,
+    borderColor: 'white',
     marginBottom: 10,
-    fontWeight:'bold',
+    fontWeight: 'bold',
     paddingHorizontal: 10,
     borderRadius: 5,
   },
@@ -70,7 +115,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    // fontFamily:'serif'
   },
 });
 

@@ -19,7 +19,7 @@ const HomePage = () => {
 
     const handleAppStateChange = async (nextAppState) => {
       if (auth.currentUser) {
-        const userStatusRef = doc(db, 'students', auth.currentUser.uid);
+        const userStatusRef = doc(db, 'teachers', auth.currentUser.uid);
         if (nextAppState === 'active') {
           // User is online
           await updateDoc(userStatusRef, { statusConnection: 'online' });

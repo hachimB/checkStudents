@@ -11,7 +11,7 @@ const AllUsers = () => {
           <View key={index} style={styles.container}>
             <View style={[styles.itemContainer, styles.border]}>
               <TouchableOpacity style={styles.boutonprofile}>
-                <Image source={require('../Assets/logo.jpeg')} style={styles.profile} />
+                <Image source={require('../Assets/checkStudents.jpg')} style={styles.profile} />
                 <Text>Nom du profile</Text>
               </TouchableOpacity>
             </View>

@@ -1,43 +1,79 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, ScrollView, SafeAreaView } from 'react-native';
-import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker';
-import { getFirestore, collection, addDoc, onSnapshot } from 'firebase/firestore';
-import { createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import React, { useState } from 'react';
+import {
+  View, TextInput, Button, StyleSheet, Text, Alert, SafeAreaView, ScrollView, TouchableOpacity, Image
+} from 'react-native';
+import { auth, db } from '../Config/firebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { auth, db } from '../Config/firebaseConfig'; // Ensure auth and db are properly exported from your firebaseConfig
+import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from '@react-navigation/native';
+import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const InscriptionStudents = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
   const [programChoice, setProgramChoice] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
-  const [data, setData] = useState([]);
-  const [statusConnection, setStatusConnection] = useState('disconnected');
-  const cursorColor = '#7e7e7e';
+  const [error, setError] = useState('');
+  const navigation = useNavigation();
 
-  useEffect(() => {
-    const fetchData = () => {
-      const unsubscribe = onSnapshot(collection(getFirestore(), "students"), (snapshot) => {
-        setData(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
-      });
-      return () => unsubscribe();
-    };
-    fetchData();
-  }, []);
+  const handleSignUp = async () => {
+    setError(''); // Reset error message
+    try {
+      // Create the user
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const { uid } = userCredential.user;
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setStatusConnection('connected');
+      const storage = getStorage();
+      const storageRef = ref(storage, `images/${uid}`);
+
+      const response = await fetch(selectedImage);
+      const blob = await response.blob();
+      const uploadTask = uploadBytesResumable(storageRef, blob);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          // Monitor upload progress
+        },
+        (error) => {
+          // Handle unsuccessful uploads
+          console.error("Error uploading image: ", error);
+        },
+        async () => {
+          // Handle successful uploads on complete
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+          // Add additional information to Firestore
+          await setDoc(doc(db, 'students', uid), {
+            uid: uid,
+            firstName: firstName,
+            lastName: lastName,
+            programChoice: programChoice,
+            email: email,
+            imageUrl: downloadURL,
+            statusConnection: 'online',
+          });
+
+          console.log('User account created & signed in, and data added to Firestore!');
+
+          // Redirect to the home page
+          navigation.navigate('AccueilTest');
+        }
+      );
+    } catch (error) {
+      if (error.code === 'auth/email-already-in-use') {
+        setError('This email address is already in use.');
       } else {
-        setStatusConnection('disconnected');
+        setError('An error occurred. Please try again.');
       }
-    });
-    return () => unsubscribe();
-  }, []);
+      console.error(error);
+    }
+  };
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -56,80 +92,6 @@ const InscriptionStudents = () => {
 
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
-    }
-  };
-
-  const handleSubmit = async () => {
-    if (!firstName || !lastName || !programChoice || !password || !email || !selectedImage) {
-      Alert.alert('Error', 'Fill all fields');
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      Alert.alert('Error', 'Enter a valid email');
-      return;
-    }
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // Create a reference to the file in Firebase Storage
-      const storage = getStorage();
-      const storageRef = ref(storage, `images/${user.uid}`);
-      
-      // Convert the image URI to a Blob
-      const response = await fetch(selectedImage);
-      const blob = await response.blob();
-
-      // Upload the image to Firebase Storage
-      const uploadTask = uploadBytesResumable(storageRef, blob);
-
-      // Monitor the upload task to handle progress, error, and completion
-      uploadTask.on('state_changed', 
-        (snapshot) => {
-          // You can use this function to monitor the upload progress
-        }, 
-        (error) => {
-          // Handle unsuccessful uploads
-          console.error("Error uploading image: ", error);
-        }, 
-        async () => {
-          // Handle successful uploads on complete
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          
-          // Save the download URL in Firestore
-          await addDoc(collection(getFirestore(), "students"), {
-            uid: user.uid,
-            firstName: firstName,
-            lastName: lastName,
-            programChoice: programChoice,
-            email: email,
-            imageUrl: downloadURL, // Store the download URL instead of the local URI
-            statusConnection: statusConnection
-          });
-
-          Alert.alert('Success', 'Registration successful.');
-          setFirstName('');
-          setLastName('');
-          setProgramChoice('');
-          setPassword('');
-          setEmail('');
-          setSelectedImage(null);
-        }
-      );
-    } catch (e) {
-      console.error("Error during registration: ", e);
-      if (e.code === 'auth/email-already-in-use') {
-        Alert.alert('Error', 'The email address is already in use by another account.');
-      } else if (e.code === 'auth/invalid-email') {
-        Alert.alert('Error', 'The email address is not valid.');
-      } else if (e.code === 'auth/weak-password') {
-        Alert.alert('Error', 'The password is too weak.');
-      } else {
-        Alert.alert('Error', 'An error occurred during registration.');
-      }
     }
   };
 
@@ -155,7 +117,7 @@ const InscriptionStudents = () => {
               placeholder='First Name'
               value={firstName}
               onChangeText={setFirstName}
-              selectionColor={cursorColor}
+              selectionColor="#E91212"
             />
             <Entypo name='user' style={styles.icon} />
           </View>
@@ -165,7 +127,7 @@ const InscriptionStudents = () => {
               placeholder='Last Name'
               value={lastName}
               onChangeText={setLastName}
-              selectionColor={cursorColor}
+              selectionColor="#E91212"
             />
             <Entypo name='user' style={styles.icon} />
           </View>
@@ -175,7 +137,7 @@ const InscriptionStudents = () => {
               placeholder='Program Choice'
               value={programChoice}
               onChangeText={setProgramChoice}
-              selectionColor={cursorColor}
+              selectionColor="#E91212"
             />
           </View>
           <View style={styles.inputContainer}>
@@ -184,7 +146,7 @@ const InscriptionStudents = () => {
               placeholder='Email'
               value={email}
               onChangeText={setEmail}
-              selectionColor={cursorColor}
+              selectionColor="#E91212"
             />
             <MaterialCommunityIcons name='email-multiple-outline' style={styles.icon} />
           </View>
@@ -194,22 +156,23 @@ const InscriptionStudents = () => {
               placeholder='Password'
               value={password}
               onChangeText={setPassword}
-              selectionColor={cursorColor}
+              selectionColor="#E91212"
               secureTextEntry
             />
           </View>
           
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>Inscription</Text>
+          <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+            <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
-     
+      
         <View style={styles.copyRight}>
           <Text style={styles.bottomText}>Tous Droit Reservés</Text>
           <Text style={styles.bottomText}>Provided By ThingsApp</Text>
           <Text style={styles.bottomText}>Copyright &#169; 2024</Text>
         </View>
       </ScrollView>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
     </SafeAreaView>
   );
 };
@@ -304,6 +267,10 @@ const styles = StyleSheet.create({
   bottomText: {
     fontSize: 14,
     textAlign: 'center',
+  },
+  error: {
+    color: 'red',
+    marginBottom: 12,
   },
 });
 

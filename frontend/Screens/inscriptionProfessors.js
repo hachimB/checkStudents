@@ -1,58 +1,100 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, ScrollView, SafeAreaView } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
-import { getFirestore, collection, getDocs, addDoc } from 'firebase/firestore';
-import { Picker } from '@react-native-picker/picker';
-import { initializeApp } from 'firebase/app';
-import { doc, setDoc } from "firebase/firestore"; 
-import {db} from '../Config/firebaseConfig';
-import { getAnalytics, isSupported } from "firebase/analytics";
+import React, { useState } from 'react';
+import {
+  View, TextInput, Button, StyleSheet, Text, Alert, SafeAreaView, ScrollView, TouchableOpacity, Image
+} from 'react-native';
+import { auth, db } from '../Config/firebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from '@react-navigation/native';
+import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
+const InscriptionStudents = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  // const [programChoice, setProgramChoice] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [error, setError] = useState('');
+  const navigation = useNavigation();
 
-  const InscriptionProfessors = () => {
-      const [selectedValue, setSelectedValue] = useState();
-      const [firstName, setFirstName] = useState('');
-      const [lastName, setLastName] = useState('');
-      const [password, setPassword] = useState('');
-      const [email, setEmail] = useState('');
-      const [programChoice, setProgramChoice] = useState('');
-      const [data, setData] = useState([]);
-      const cursorColor = '#7e7e7e';
-    
-      useEffect(() => {
-        const fetchData = async () => {
-          const db = getFirestore();
-          const data = await getDocs(collection(db, "students"));
-          setData(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+  const handleSignUp = async () => {
+    setError(''); // Reset error message
+    try {
+      // Create the user
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const { uid } = userCredential.user;
+
+      const storage = getStorage();
+      const storageRef = ref(storage, `imagesTeachers/${uid}`);
+
+      const response = await fetch(selectedImage);
+      const blob = await response.blob();
+      const uploadTask = uploadBytesResumable(storageRef, blob);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          // Monitor upload progress
+        },
+        (error) => {
+          // Handle unsuccessful uploads
+          console.error("Error uploading image: ", error);
+        },
+        async () => {
+          // Handle successful uploads on complete
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+          // Add additional information to Firestore
+          await setDoc(doc(db, 'teachers', uid), {
+            uid: uid,
+            firstName: firstName,
+            lastName: lastName,
+            // programChoice: programChoice,
+            email: email,
+            imageUrl: downloadURL,
+            statusConnection: 'online',
+          });
+
+          console.log('User account created & signed in, and data added to Firestore!');
+
+          // Redirect to the home page
+          navigation.navigate('DrawerProfessors');
         }
-        fetchData();
-      }, []);
-    
-      const handleSubmit = async () => {
-      if (!firstName || !lastName || !programChoice || !password || !email) {
-        Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
-        return;
+      );
+    } catch (error) {
+      if (error.code === 'auth/email-already-in-use') {
+        setError('This email address is already in use.');
+      } else {
+        setError('An error occurred. Please try again.');
       }
-    
-      try {
-        await addDoc(collection(getFirestore(), "students"), {
-          firstName: firstName,
-          lastName: lastName,
-          programChoice: programChoice,
-          password: password,
-          email: email,
-        });
-        Alert.alert('Success', 'Inscription réussie.');
-        setFirstName('');
-        setLastName('');
-        setProgramChoice(null);
-        setPassword('');
-        setEmail('');
-      } catch (e) {
-        console.error("Error adding document: ", e);
-      }
-    };
-    
+      console.error(error);
+    }
+  };
+
+  const pickImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      Alert.alert('Error', 'Permission to access camera roll is required!');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.stickyContainer}>
@@ -62,13 +104,20 @@ import { getAnalytics, isSupported } from "firebase/analytics";
       </View>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.formContainer}>
+          <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
+            {selectedImage ? (
+              <Image source={{ uri: selectedImage }} style={styles.selectedImage} />
+            ) : (
+              <Text style={styles.imagePickerText}>Pick an image</Text>
+            )}
+          </TouchableOpacity>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.textInput}
               placeholder='First Name'
               value={firstName}
               onChangeText={setFirstName}
-              selectionColor={cursorColor}
+              selectionColor="#E91212"
             />
             <Entypo name='user' style={styles.icon} />
           </View>
@@ -78,26 +127,26 @@ import { getAnalytics, isSupported } from "firebase/analytics";
               placeholder='Last Name'
               value={lastName}
               onChangeText={setLastName}
-              selectionColor={cursorColor}
+              selectionColor="#E91212"
             />
             <Entypo name='user' style={styles.icon} />
           </View>
-          <View style={styles.inputContainer}>
+          {/* <View style={styles.inputContainer}>
             <TextInput
               style={styles.textInput}
               placeholder='Program Choice'
               value={programChoice}
               onChangeText={setProgramChoice}
-              selectionColor={cursorColor}
+              selectionColor="#E91212"
             />
-          </View>
+          </View> */}
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.textInput}
               placeholder='Email'
               value={email}
               onChangeText={setEmail}
-              selectionColor={cursorColor}
+              selectionColor="#E91212"
             />
             <MaterialCommunityIcons name='email-multiple-outline' style={styles.icon} />
           </View>
@@ -107,22 +156,23 @@ import { getAnalytics, isSupported } from "firebase/analytics";
               placeholder='Password'
               value={password}
               onChangeText={setPassword}
-              selectionColor={cursorColor}
+              selectionColor="#E91212"
               secureTextEntry
             />
           </View>
           
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style={styles.buttonText}>Inscription</Text>
+          <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+            <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
-     
-      <View style={styles.copyRight}>
-        <Text style={styles.bottomText}>Tous Droit Reservés</Text>
-        <Text style={styles.bottomText}>Provided By ThingsApp</Text>
-        <Text style={styles.bottomText}>Copyright &#169; 2024</Text>
-      </View>
+      
+        <View style={styles.copyRight}>
+          <Text style={styles.bottomText}>Tous Droit Reservés</Text>
+          <Text style={styles.bottomText}>Provided By ThingsApp</Text>
+          <Text style={styles.bottomText}>Copyright &#169; 2024</Text>
+        </View>
       </ScrollView>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
     </SafeAreaView>
   );
 };
@@ -157,6 +207,25 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     paddingTop: 220, // Adjusted to ensure form starts below the sticky header
+  },
+  imagePicker: {
+    width: '90%',
+    height: 150,
+    borderColor: '#E91212',
+    borderWidth: 1,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  imagePickerText: {
+    color: '#7e7e7e',
+    fontSize: 18,
+  },
+  selectedImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 5,
   },
   inputContainer: {
     width: '90%',
@@ -199,6 +268,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
   },
+  error: {
+    color: 'red',
+    marginBottom: 12,
+  },
 });
 
-export default InscriptionProfessors;
+export default InscriptionStudents;

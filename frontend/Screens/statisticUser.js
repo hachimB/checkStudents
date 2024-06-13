@@ -4,7 +4,7 @@ import { BarChart } from "react-native-gifted-charts";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 
-const DiagrameStudents = () => {
+const DiagrammeStudent = () => {
     const barData = [
         {
           value: 230,
@@ -70,4 +70,4 @@ const DiagrameStudents = () => {
     );
 }
 
-export default DiagrameStudents ;
+export default DiagrammeStudent;
