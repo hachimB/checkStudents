@@ -1,177 +1,14 @@
-// import React from 'react';
-// import { View, Text, Image, SafeAreaView, ImageBackground, StyleSheet, TextInput, ScrollView ,TouchableOpacity } from 'react-native';
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-// // import ConnectionStudents from './connectionStudents' ;
-// // import ConnectionProfessors from './connectionProfessors';
-// import UsersDetails from './usersDetails';
-// import { useNavigation } from '@react-navigation/native';
-
-
-// const Tab = createBottomTabNavigator();
-// const HomeProfessors = () => {
-
-//   const navigation = useNavigation();
-//   const navigateToUsersDetails = () => {
-//     navigation.navigate('UsersDetails'); 
-//   };
-
-//   return (
-//     <SafeAreaView style={{flex:1,backgroundColor: 'white'}}>
-//       <ImageBackground source={require('../Assets/logoHome.png')} style={styles.logoContainer} />
-//       <View style={{justifyContent:'center',alignItems:'center'}}>
-//         <TextInput style={styles.input} />
-//       </View>
-//       <View style={styles.present}>
-//         <View style={{ justifyContent: 'space-between' ,flexDirection:'row',paddingHorizontal:6,paddingVertical:2 }}>
-//           <View style={{ flexDirection: 'column', gap: 10 }}>
-//             <Text>AT THE MOMENT </Text>
-//             <Text>In classroom : 23</Text>
-//           </View>
-//           <Text>9H20</Text>
-//         </View>
-        
-//         <View style={styles.scrollContainer}>
-//         <ScrollView horizontal>
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//           <Image source={require('../Assets/logoHome.png')} style={styles.imageScroll} />
-//         </ScrollView>
-//         </View>
-//       </View>
-//       <Text style={{textAlign:'center',fontSize:16,}}>More active</Text>
-      
-//       <View style={{flexDirection:'row',alignSelf:'center',width:326,justifyContent:'center',gap:2,}}>
-//         <TouchableOpacity style={styles.card} onPress={navigateToUsersDetails}>
-//           <Image source={require('../Assets/logoHome.png')} style={styles.image} />
-//           <Text style={styles.text}>Reason</Text>
-//         </TouchableOpacity>
-//         <TouchableOpacity style={styles.card} onPress={navigateToUsersDetails}>
-//           <Image source={require('../Assets/logoHome.png')} style={styles.image} />
-//           <Text style={styles.text}>Reason</Text>
-//         </TouchableOpacity>
-//         <TouchableOpacity onPress={navigateToUsersDetails} style={styles.card} >
-//           <Image source={require('../Assets/logoHome.png')} style={styles.image} />
-//           <Text style={styles.text}>Reason</Text>
-//         </TouchableOpacity>
-        
-//       </View>
-
-//       <View style={{flexDirection:'row',marginTop:10,marginHorizontal:5}}>
-//         <Image source={require('../Assets/logoHome.png')}  style={styles.directiveImage} />
-//         <Image source={require('../Assets/logoHome.png')}  style={styles.directiveImage}/>
-//       </View>
-        
-//       <View style={{flex:1,justifyContent:'flex-end'}}>
-//       <View style={{flexDirection:'row',alignItems:'center', borderWidth:1, borderColor:'#CCCCCC' ,height:45,justifyContent:'space-between',marginHorizontal:5,borderBottomLeftRadius:20,borderBottomRightRadius:20,paddingHorizontal:10,}}>
-//         <TouchableOpacity>
-//           <MaterialCommunityIcons name='home' size={20} />
-//         </TouchableOpacity>
-//         <TouchableOpacity>
-//           <MaterialCommunityIcons name='home' size={20} />
-//         </TouchableOpacity>
-//         <TouchableOpacity>
-//           <MaterialCommunityIcons name='home' size={20} />
-//         </TouchableOpacity>
-//         </View>
-//       </View>
-//     </SafeAreaView>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   logoContainer: {
-//     width: '100%',
-//     height: 180,
-//   },
-//   imageScroll: {
-//     width: 40,
-//     height: 40,
-//     borderRadius: 25,
-//   },
-//   present: {
-//     flexDirection:'column',
-//     // borderWidth: 1,
-//     // borderColor: 'red',
-//     backgroundColor: '#D9D9D9',
-//     borderRadius: 5,
-//     width: 326,
-//     height: 130,
-//     marginTop:10,
-//     alignSelf:'center'
-//   },
-//   input: {
-//     borderWidth: 1,
-//     borderColor: 'white',
-//     backgroundColor:'#D9D9D9',
-//     width: '90%', //300px
-//     height: 40,
-//     borderRadius:5,
-//     marginTop:-20
-//   },
-//   scrollContainer: {
-//     flex:1,
-//     // borderWidth:1,
-//     // borderColor:'green',
-//     marginTop:30,
-//   },
-//   card: {
-//     backgroundColor: '#fff',
-//     elevation: 5,
-//     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.2,
-//     shadowRadius: 2,
-//     alignItems: 'center',
-//   },
-//   image: {
-//     width: 108,
-//     height: 70,
-//   },
-//   text: {
-//     fontSize: 16,
-//     color: '#333',
-//   },
-//   directiveImage:{
-//     flex:1,
-//     height:80
-//   }
-// });
-
-// export default HomeProfessors;
-
-
-
-
-
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, SafeAreaView, ImageBackground, StyleSheet, TextInput, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, SafeAreaView, ImageBackground, StyleSheet, TextInput, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
-import { db } from '../Config/firebaseConfig'; // Ensure your Firebase config is correctly set up
+import { db } from '../Config/firebaseConfig';
 import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 
 const HomeProfessors = () => {
   const [users, setUsers] = useState([]);
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -187,108 +24,160 @@ const HomeProfessors = () => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const navigateToUsersDetails = () => {
     navigation.navigate('UsersDetails');
   };
-  const dateObject = new Date();
-  const currentDate = dateObject.toLocaleDateString();
-  const currentTime = dateObject.toLocaleTimeString();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+    <SafeAreaView style={styles.container}>
       <ImageBackground source={require('../Assets/logoHome.png')} style={styles.logoContainer} />
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <TextInput style={styles.input}/> 
-        <Text>{currentTime}</Text>
+      <View style={styles.timeContainer}>
+        <TextInput style={styles.input} /> 
       </View>
       <View style={styles.present}>
-        <View style={{ justifyContent: 'space-between', flexDirection: 'row', paddingHorizontal: 6, paddingVertical: 2 }}>
-          <View style={{ flexDirection: 'column', gap: 10 }}>
+        <View style={styles.presentHeader}>
+          <View style={styles.presentTextContainer}>
             <Text>AT THE MOMENT</Text>
             <Text>In classroom: 23</Text>
           </View>
-          <Text>Date: {currentDate}</Text>
+          <Text>Date: {currentTime}</Text>
         </View>
 
-        <View style={styles.scrollContainer}>
-          <ScrollView horizontal>
-            {users.map((user) => (
-              <Image key={user.id} source={{ uri: user.imageUrl }} style={styles.imageScroll} />
-            ))}
-          </ScrollView>
-        </View>
+        <ScrollView horizontal contentContainerStyle={styles.scrollContainer}>
+          {users.map((user) => (
+            <View key={user.id} style={styles.containerProfile}>
+              <Image source={{ uri: user.imageUrl }} style={styles.imageProfile} />
+              <View style={styles.badge}></View>
+            </View>
+          ))}
+        </ScrollView>
       </View>
-      <Text style={{ textAlign: 'center', fontSize: 16 }}>More active</Text>
-
-      <View style={{ flexDirection: 'row', alignSelf: 'center', width: 326, justifyContent: 'center', gap: 2 }}>
+      <View style={styles.cardsContainer}>
         <TouchableOpacity style={styles.card} onPress={navigateToUsersDetails}>
-          <Image source={require('../Assets/logoHome.png')} style={styles.image} />
-          <Text style={styles.text}>Reason</Text>
+          <Image source={require('../Assets/logoHome.png')} style={styles.cardImage} />
+          <Text style={styles.cardText}>Reason</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card} onPress={navigateToUsersDetails}>
-          <Image source={require('../Assets/logoHome.png')} style={styles.image} />
-          <Text style={styles.text}>Reason</Text>
+          <Image source={require('../Assets/logoHome.png')} style={styles.cardImage} />
+          <Text style={styles.cardText}>Reason</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={navigateToUsersDetails} style={styles.card}>
-          <Image source={require('../Assets/logoHome.png')} style={styles.image} />
-          <Text style={styles.text}>Reason</Text>
+          <Image source={require('../Assets/logoHome.png')} style={styles.cardImage} />
+          <Text style={styles.cardText}>Reason</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={{ flexDirection: 'row', marginTop: 10, marginHorizontal: 5 }}>
+      <View style={styles.directiveContainer}>
         <Image source={require('../Assets/logoHome.png')} style={styles.directiveImage} />
         <Image source={require('../Assets/logoHome.png')} style={styles.directiveImage} />
       </View>
 
-      <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: '#CCCCCC', height: 45, justifyContent: 'space-between', marginHorizontal: 5, borderBottomLeftRadius: 20, borderBottomRightRadius: 20, paddingHorizontal: 10 }}>
-          <TouchableOpacity>
-            <MaterialCommunityIcons name='home' size={20} />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <MaterialCommunityIcons name='home' size={20} />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <MaterialCommunityIcons name='home' size={20} />
-          </TouchableOpacity>
-        </View>
+      <View style={styles.footer}>
+        <TouchableOpacity>
+          <MaterialCommunityIcons name='home' size={scale(20)} />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <MaterialCommunityIcons name='home' size={scale(20)} />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <MaterialCommunityIcons name='home' size={scale(20)} />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
   logoContainer: {
     width: '100%',
-    height: 180,
+    height: verticalScale(200),
+    resizeMode: 'cover',
   },
-  imageScroll: {
-    width: 40,
-    height: 40,
-    borderRadius: 25,
-    marginHorizontal: 5,
-  },
-  present: {
-    flexDirection: 'column',
-    backgroundColor: '#D9D9D9',
-    borderRadius: 5,
-    width: 326,
-    height: 130,
-    marginTop: 10,
-    alignSelf: 'center',
+  timeContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: verticalScale(10),
   },
   input: {
     borderWidth: 1,
     borderColor: 'white',
     backgroundColor: '#D9D9D9',
     width: '90%',
-    height: 40,
-    borderRadius: 5,
-    marginTop: -20,
+    height: verticalScale(40),
+    borderRadius: moderateScale(5),
+    paddingHorizontal: scale(10),
+  },
+  present: {
+    flexDirection: 'column',
+    backgroundColor: '#D9D9D9',
+    borderRadius: moderateScale(5),
+    width: '90%',
+    padding: scale(5),
+    marginVertical: verticalScale(10),
+    alignSelf: 'center',
+  },
+  presentHeader: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    marginBottom: verticalScale(10),
+  },
+  presentTextContainer: {
+    flexDirection: 'column',
   },
   scrollContainer: {
-    flex: 1,
-    marginTop: 30,
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  containerProfile: {
+    borderWidth: 2,
+    borderColor: '#ccc',
+    borderRadius: moderateScale(35),
+    width: scale(50),
+    height: verticalScale(50),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: scale(8),
+    position: 'relative',
+  },
+  imageProfile: {
+    width: scale(46), // Slightly smaller than containerProfile to fit within the border
+    height: verticalScale(46),
+    borderRadius: moderateScale(23),
+  },
+  badge: {
+    position: 'absolute',
+    width: scale(10),
+    height: verticalScale(10),
+    borderRadius: moderateScale(5),
+    borderWidth: 1,
+    borderColor: 'white',
+    backgroundColor: 'green',
+    bottom: 0,
+    right: 0,
+  },
+  moreActiveText: {
+    textAlign: 'center',
+    fontSize: moderateScale(16),
+  },
+  cardsContainer: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    width: '90%',
+    justifyContent: 'space-between',
+    marginVertical: verticalScale(10),
   },
   card: {
     backgroundColor: '#fff',
@@ -297,19 +186,39 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2,
     alignItems: 'center',
+    width: scale(100),
   },
-  image: {
-    width: 108,
-    height: 70,
+  cardImage: {
+    width: scale(100),
+    height: verticalScale(50),
   },
-  text: {
-    fontSize: 16,
+  cardText: {
+    fontSize: moderateScale(16),
     color: '#333',
+    marginTop: verticalScale(5),
+  },
+  directiveContainer: {
+    flexDirection: 'row',
+    marginTop: verticalScale(10),
+    marginHorizontal: scale(5),
   },
   directiveImage: {
     flex: 1,
-    height: 80,
+    height: verticalScale(80),
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    height: verticalScale(45),
+    justifyContent: 'space-between',
+    marginHorizontal: scale(5),
+    borderBottomLeftRadius: moderateScale(20),
+    borderBottomRightRadius: moderateScale(20),
+    paddingHorizontal: scale(10),
   },
 });
 
 export default HomeProfessors;
+

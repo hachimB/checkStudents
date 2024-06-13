@@ -3,44 +3,43 @@ import 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import HomeStudents from './Screens/homeStudents';
-import HomeProfessors from './Screens/homeProfessors';
-import ConnectionProfessors from './Screens/connectionProfessors';
-import ConnectionStudents from './Screens/connectionStudents';
-import InscriptionStudents from './Screens/inscriptionStudents';
-import InscriptionProfessors from './Screens/inscriptionProfessors';
-import UsersDetails from './Screens/usersDetails';
+import AccueilTest from './Screens/AccueilTest';
 import AllUsers from './Screens/allUsers';
 import AllUsersConnected from './Screens/allUsersConnected';
-import StatusConnection from './Screens/statusConnection';
+import ConnectionProfessors from './Screens/connectionProfessors';
+import ConnectionStudents from './Screens/connectionStudents';
 import DrawerProfessors from './Screens/drawerProfessors';
 import Home from './Screens/home';
+import HomeProfessors from './Screens/homeProfessors';
+import HomeStudents from './Screens/homeStudents';
+import InscriptionProfessors from './Screens/inscriptionProfessors';
+import InscriptionStudents from './Screens/inscriptionStudents';
+import Rendu from "./Screens/rendu";
 import SignUp from "./Screens/Essai";
-import AccueilTest from './Screens/AccueilTest'
-
-
-
+import StatusConnection from './Screens/statusConnection';
+import UsersDetails from './Screens/usersDetails';
 
 const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeProfessors">
-        <Stack.Screen name="StatusConnection" component={StatusConnection} />
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="AccueilTest" component={AccueilTest} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="Home" component={Home} options={{headerShown : false}}  />
-        <Stack.Screen name="HomeStudents" component={HomeStudents} />
-        <Stack.Screen name="HomeProfessors" component={HomeProfessors} />
-        <Stack.Screen name="ConnectionStudents" component={ConnectionStudents} />
-        <Stack.Screen name="ConnectionProfessors" component={ConnectionProfessors} />
-        <Stack.Screen name="InscriptionStudents" component={InscriptionStudents} />
-        <Stack.Screen name="InscriptionProfessors" component={InscriptionProfessors} />
-        <Stack.Screen name="UsersDetails" component={UsersDetails} />
         <Stack.Screen name="AllUsers" component={AllUsers} />
         <Stack.Screen name="AllUsersConnected" component={AllUsersConnected} />
-        <Stack.Screen name="DrawerProfessors" component={DrawerProfessors} />
+        <Stack.Screen name="ConnectionProfessors" component={ConnectionProfessors} />
+        <Stack.Screen name="ConnectionStudents" component={ConnectionStudents} />
+        <Stack.Screen name="DrawerProfessors" component={DrawerProfessors} options={{headerShown : false}} />
+        <Stack.Screen name="Home" component={Home} options={{headerShown : false}}  />
+        <Stack.Screen name="HomeProfessors" component={HomeProfessors} />
+        <Stack.Screen name="HomeStudents" component={HomeStudents} />
+        <Stack.Screen name="InscriptionProfessors" component={InscriptionProfessors} />
+        <Stack.Screen name="InscriptionStudents" component={InscriptionStudents}  />
+        <Stack.Screen name="Rendu" component={Rendu} />
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="StatusConnection" component={StatusConnection} />
+        <Stack.Screen name="UsersDetails" component={UsersDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );
