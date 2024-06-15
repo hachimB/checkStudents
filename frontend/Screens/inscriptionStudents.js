@@ -62,7 +62,7 @@ const InscriptionStudents = () => {
           console.log('User account created & signed in, and data added to Firestore!');
 
           // Redirect to the home page
-          navigation.navigate('AccueilTest');
+          navigation.navigate('HomeStudents');
         }
       );
     } catch (error) {
