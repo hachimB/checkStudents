@@ -11,18 +11,26 @@ import { useNavigation } from '@react-navigation/native';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const InscriptionStudents = () => {
+const InscriptionProfessors = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
+  const [secretID, setSecretID] = useState('');
   const [lastName, setLastName] = useState('');
-  // const [programChoice, setProgramChoice] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
   const [error, setError] = useState('');
   const navigation = useNavigation();
 
+  const secretIDRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
   const handleSignUp = async () => {
     setError(''); // Reset error message
+
+    if (!secretIDRegex.test(secretID)) {
+      setError('SecretID incorrect');
+      return;
+    }
+
     try {
       // Create the user
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -53,7 +61,7 @@ const InscriptionStudents = () => {
             uid: uid,
             firstName: firstName,
             lastName: lastName,
-            // programChoice: programChoice,
+            secretID: secretID,
             email: email,
             imageUrl: downloadURL,
             statusConnection: 'online',
@@ -131,15 +139,6 @@ const InscriptionStudents = () => {
             />
             <Entypo name='user' style={styles.icon} />
           </View>
-          {/* <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.textInput}
-              placeholder='Program Choice'
-              value={programChoice}
-              onChangeText={setProgramChoice}
-              selectionColor="#E91212"
-            />
-          </View> */}
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.textInput}
@@ -156,6 +155,17 @@ const InscriptionStudents = () => {
               placeholder='Password'
               value={password}
               onChangeText={setPassword}
+              selectionColor="#E91212"
+              secureTextEntry
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.textInput}
+              placeholder='SecretID'
+              value={secretID}
+              onChangeText={setSecretID}
               selectionColor="#E91212"
               secureTextEntry
             />
@@ -274,4 +284,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InscriptionStudents;
+export default InscriptionProfessors;

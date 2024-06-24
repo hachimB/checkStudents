@@ -3,31 +3,28 @@ import { Dimensions, Text, View, Image, StyleSheet } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 
 const images = [
-    { uri: require('../Assets/checkStudents.jpg') },
-    { uri: require('../Assets/connectionStudents.png') },
-    { uri: require('../Assets/connectionProfessors.png') },
-    { uri: require('../Assets/image4.jpg') },
-    { uri: require('../Assets/logoHome.png') },
-    { uri: require('../Assets/checkStudents.jpg') },
+    { uri: require('../Assets/checkStudents.jpg'), text: 'Bienvenu sur checkStudens' },
+    { uri: require('../Assets/administrez.png'), text: 'Administrez en un click' },
+    { uri: require('../Assets/connectionStudents.png'), text: 'Connexion des Etudiants' },
+    { uri: require('../Assets/connectionProfessors.png'), text: 'Connexion des Professeurs' },
 ];
 
 const CarouselCustom = () => {
     const width = Dimensions.get('window').width;
     return (
-        <View style={{ flex: 1 ,alignItems:'center', paddingTop:40}}>
+        <View style={{ flex: 1, alignItems: 'center', paddingTop: 40 }}>
             <Carousel
                 loop
-                width={310}
-                height={190}
+                width={width - 25}
+                height={300}
                 autoPlay={true}
                 data={images}
                 scrollAnimationDuration={1000}
-                onSnapToItem={(index) => console.log('current index:', index)}
                 renderItem={({ item, index }) => (
                     <View style={styles.imageContainer}>
                         <Image source={item.uri} style={styles.image} />
                         <View style={styles.overlay}>
-                            <Text style={styles.text}>{`Image ${index + 1}`}</Text>
+                            <Text style={styles.text}>{item.text}</Text>
                         </View>
                     </View>
                 )}

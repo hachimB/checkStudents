@@ -160,6 +160,8 @@ const InscriptionStudents = () => {
               secureTextEntry
             />
           </View>
+
+
           
           <TouchableOpacity style={styles.button} onPress={handleSignUp}>
             <Text style={styles.buttonText}>Sign Up</Text>

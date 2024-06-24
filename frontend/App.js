@@ -17,6 +17,7 @@ import InscriptionProfessors from './Screens/inscriptionProfessors';
 import InscriptionStudents from './Screens/inscriptionStudents';
 import SignUp from "./Screens/Essai";
 import StatusConnection from './Screens/statusConnection';
+import StatusInscription from "./Screens/statusInscription";
 import UsersDetails from './Screens/usersDetails';
 
 const Stack = createStackNavigator();
@@ -24,7 +25,7 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="ConnectionProfessors">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="AccueilTest" component={AccueilTest} />
         <Stack.Screen name="AllUsers" component={AllUsers} />
         <Stack.Screen name="AllUsersConnected" component={AllUsersConnected} />
@@ -38,8 +39,9 @@ const App = () => {
         <Stack.Screen name="InscriptionProfessors" component={InscriptionProfessors} />
         <Stack.Screen name="InscriptionStudents" component={InscriptionStudents}  />
         <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="StatusConnection" component={StatusConnection} />
-        <Stack.Screen name="UsersDetails" component={UsersDetails} />
+        <Stack.Screen name="StatusConnection" options={{ headerTitle: '' }} component={StatusConnection} />
+        <Stack.Screen name="StatusInscription" options={{ headerTitle: '' }} component={StatusInscription} />
+        <Stack.Screen name="UsersDetails" options={{ headerTitle: '' }} component={UsersDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );
