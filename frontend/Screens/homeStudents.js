@@ -6,6 +6,8 @@ import { auth, db } from '../Config/firebaseConfig';
 import { collection, query, where, onSnapshot, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { FontAwesome5 } from '@expo/vector-icons';
+import BottomNavigationCustom from './bottomNavigation';
+
 
 const HomeStudents = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -120,6 +122,7 @@ const HomeStudents = () => {
         </View>
         <Image source={require('../Assets/administrez.png')} style={styles.directiveImage} />
       </View>
+      <BottomNavigationCustom />
     </SafeAreaView>
   );
 };
@@ -198,7 +201,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'white',
     backgroundColor: 'green',
-    bottom: 0,
+    bottom: 3,
     right: 0,
   },
   moreActiveText: {
