@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, SafeAreaView, AppState, ImageBackground, StyleSheet, TextInput, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, Image, SafeAreaView, AppState, ImageBackground, StyleSheet, TextInput, ScrollView, TouchableOpacity, StatusBar, Platform } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { auth, db } from '../Config/firebaseConfig';
 import { collection, query, where, onSnapshot, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { FontAwesome5 } from '@expo/vector-icons';
-
-
 
 const HomeStudents = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -76,9 +74,12 @@ const HomeStudents = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ImageBackground source={require('../Assets/logoHome.png')} style={styles.logoContainer} />
+      <StatusBar barStyle="dark-content" />
+      <ImageBackground source={require('../Assets/logoHome.png')} style={styles.logoContainer}>
+        <View style={styles.logoPadding} />
+      </ImageBackground>
       <View style={styles.timeContainer}>
-        <TextInput style={styles.input}  /> 
+        <TextInput style={styles.input} />
       </View>
       <View style={styles.present}>
         <View style={styles.presentHeader}>
@@ -113,26 +114,11 @@ const HomeStudents = () => {
         </TouchableOpacity>
       </View>
 
-
-      
-
       <View style={styles.directiveContainer}>
-        <View style={styles.administrerContainer} >
-          <Text style={{color:'white'}}>Administrez en click</Text>
+        <View style={styles.administrerContainer}>
+          <Text style={{ color: 'white' }}>Administrez en click</Text>
         </View>
         <Image source={require('../Assets/administrez.png')} style={styles.directiveImage} />
-      </View>
-
-      <View style={styles.footer}>
-        <TouchableOpacity onPress={ () => navigation.navigate('HomeStudents')}>
-          <MaterialCommunityIcons name='home' size={scale(20)} />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Image source={require('../Assets/increase.png')} style={{width:20,height:20}} />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <FontAwesome5 name="user-circle" size={20} color="black" />
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -148,6 +134,9 @@ const styles = StyleSheet.create({
     height: verticalScale(200),
     resizeMode: 'cover',
   },
+  logoPadding: {
+    height: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight, // Adjust for the status bar height only on Android
+  },
   timeContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -161,7 +150,7 @@ const styles = StyleSheet.create({
     height: verticalScale(40),
     borderRadius: moderateScale(5),
     paddingHorizontal: scale(10),
-    textAlign: 'center', // Added to center the text
+    textAlign: 'center',
   },
   present: {
     flexDirection: 'column',
@@ -197,7 +186,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   imageProfile: {
-    width: scale(46), // Slightly smaller than containerProfile to fit within the border
+    width: scale(46),
     height: verticalScale(46),
     borderRadius: moderateScale(23),
   },
@@ -234,7 +223,7 @@ const styles = StyleSheet.create({
   },
   cardImage: {
     width: scale(100),
-    height: verticalScale(50),
+    height: verticalScale(80),
   },
   cardText: {
     fontSize: moderateScale(16),
@@ -250,11 +239,11 @@ const styles = StyleSheet.create({
     flex: 1,
     height: verticalScale(80),
   },
-  administrerContainer:{
-    backgroundColor:'#EF4444',
-    flex:1,
-    justifyContent:'center',
-    alignItems:'center',
+  administrerContainer: {
+    backgroundColor: '#EF4444',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   footer: {
     flexDirection: 'row',
@@ -271,4 +260,3 @@ const styles = StyleSheet.create({
 });
 
 export default HomeStudents;
-
