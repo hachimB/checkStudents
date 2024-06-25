@@ -26,7 +26,7 @@ const StatusInscription = () => {
         options={{headerShown :false}}
         />
         <Tab.Screen
-         name="InscriptionProfessors"
+         name="InscriptionProfesors"
           component={InscriptionProfessors}
           options={{headerShown :false}}
         />

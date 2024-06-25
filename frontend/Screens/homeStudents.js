@@ -5,6 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 import { auth, db } from '../Config/firebaseConfig';
 import { collection, query, where, onSnapshot, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
+import { FontAwesome5 } from '@expo/vector-icons';
+
+
 
 const HomeStudents = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -75,7 +78,7 @@ const HomeStudents = () => {
     <SafeAreaView style={styles.container}>
       <ImageBackground source={require('../Assets/logoHome.png')} style={styles.logoContainer} />
       <View style={styles.timeContainer}>
-        <TextInput style={styles.input} value={currentTime} editable={false} /> 
+        <TextInput style={styles.input}  /> 
       </View>
       <View style={styles.present}>
         <View style={styles.presentHeader}>
@@ -97,33 +100,35 @@ const HomeStudents = () => {
       </View>
       <View style={styles.cardsContainer}>
         <TouchableOpacity style={styles.card} onPress={navigateToUsersDetails}>
-          <Image source={require('../Assets/logoHome.png')} style={styles.cardImage} />
+          <Image source={require('../Assets/image6.jpg')} style={styles.cardImage} />
           <Text style={styles.cardText}>Reason</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card} onPress={navigateToUsersDetails}>
-          <Image source={require('../Assets/logoHome.png')} style={styles.cardImage} />
+          <Image source={require('../Assets/image1.jpg')} style={styles.cardImage} />
           <Text style={styles.cardText}>Reason</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={navigateToUsersDetails} style={styles.card}>
-          <Image source={require('../Assets/logoHome.png')} style={styles.cardImage} />
+          <Image source={require('../Assets/image2.jpg')} style={styles.cardImage} />
           <Text style={styles.cardText}>Reason</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.directiveContainer}>
-        <Image source={require('../Assets/logoHome.png')} style={styles.directiveImage} />
-        <Image source={require('../Assets/logoHome.png')} style={styles.directiveImage} />
+        <View style={styles.administrerContainer} >
+          <Text style={{color:'white'}}>Administrez en click</Text>
+        </View>
+        <Image source={require('../Assets/administrez.png')} style={styles.directiveImage} />
       </View>
 
       <View style={styles.footer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={ () => navigation.navigate('HomeStudents')}>
           <MaterialCommunityIcons name='home' size={scale(20)} />
         </TouchableOpacity>
         <TouchableOpacity>
-          <MaterialCommunityIcons name='home' size={scale(20)} />
+          <Image source={require('../Assets/increase.png')} style={{width:20,height:20}} />
         </TouchableOpacity>
         <TouchableOpacity>
-          <MaterialCommunityIcons name='home' size={scale(20)} />
+          <FontAwesome5 name="user-circle" size={20} color="black" />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -241,6 +246,12 @@ const styles = StyleSheet.create({
   directiveImage: {
     flex: 1,
     height: verticalScale(80),
+  },
+  administrerContainer:{
+    backgroundColor:'#EF4444',
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center',
   },
   footer: {
     flexDirection: 'row',

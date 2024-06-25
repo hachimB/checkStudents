@@ -47,8 +47,7 @@ const ConnectionStudents = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Text style={{ textAlign: 'center' }}>Students authentication</Text>
+    <>
       <ImageBackground source={require('../Assets/connectionStudents.png')} style={styles.backgroundStudent}>
         <View style={styles.overlay}>
           <TextInput
@@ -71,7 +70,7 @@ const ConnectionStudents = () => {
           </TouchableOpacity>
         </View>
       </ImageBackground>
-    </SafeAreaView>
+    </>
   );
 };
 

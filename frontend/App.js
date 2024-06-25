@@ -25,7 +25,7 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName="DrawerProfessors">
         <Stack.Screen name="AccueilTest" component={AccueilTest} />
         <Stack.Screen name="AllUsers" component={AllUsers} />
         <Stack.Screen name="AllUsersConnected" component={AllUsersConnected} />
@@ -34,8 +34,8 @@ const App = () => {
         <Stack.Screen name="ConnectionStudents" component={ConnectionStudents} />
         <Stack.Screen name="DrawerProfessors" component={DrawerProfessors} options={{headerShown : false}} />
         <Stack.Screen name="Home" component={Home} options={{headerShown : false}}  />
-        <Stack.Screen name="HomeProfessors" component={HomeProfessors} />
-        <Stack.Screen name="HomeStudents" component={HomeStudents} />
+        <Stack.Screen name="HomeProfessors" options={{ headerTitle: '' }} component={HomeProfessors} />
+        <Stack.Screen name="HomeStudents" options={{ headerTitle: '' }}  component={HomeStudents} />
         <Stack.Screen name="InscriptionProfessors" component={InscriptionProfessors} />
         <Stack.Screen name="InscriptionStudents" component={InscriptionStudents}  />
         <Stack.Screen name="SignUp" component={SignUp} />

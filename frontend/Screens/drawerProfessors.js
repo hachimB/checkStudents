@@ -3,10 +3,13 @@ import { View, StyleSheet } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeProfessors from './homeProfessors';
+import HomeStudents from './homeStudents';
 import AllUsers from './allUsers';
 import AllUsersConnected from './allUsersConnected';
 import GradeStudents from './gradeStudents';
 import DrawerHeader from './DrawerHeader';
+import { AntDesign } from '@expo/vector-icons';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -14,9 +17,16 @@ const DrawerProfessors = () => {
   return (
     <Drawer.Navigator drawerContent={(props) => <DrawerHeader {...props} />}>
       <Drawer.Screen
-        name="HomeProfessors"
-        component={HomeProfessors}
-        options={{ headerTitle: '' }}
+        name="HomeStudents"
+        component={HomeStudents}
+        options={{
+          headerTitle :'',
+          drawerIcon: ({ color }) => (
+            <View style={styles.iconContainer}>
+              <AntDesign name="home" size={24} color="black" />
+            </View>
+          ),
+        }}
       />
       <Drawer.Screen
         name="AllUsersConnected"
