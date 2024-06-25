@@ -1,52 +1,126 @@
-import * as React from 'react';
-import { View, Text, FlatList, Image } from 'react-native';
-import uuid from 'react-native-uuid';
-
-
-const data = [
-  { id: uuid.v4(), image: require('../Assets/coffee1.jpg'), name: 'Babacar', program: ' ISI '},
-  { id: uuid.v4(), image: require('../Assets/coffee2.jpg'), name: 'Franck', program: ' ISI '},
-  { id: uuid.v4(), image: require('../Assets/coffee3.jpg'), name: 'Astrel', program: 'ISI'},
-  { id: uuid.v4(), image: require('../Assets/coffee4.jpg') , name: 'Hachim', program: 'ISI'},
-  // other data items...
-];
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { db } from '../Config/firebaseConfig';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 
 const AllUsersConnected = () => {
-  const renderItem = ({ item }) => (
-    <View style={{ flexDirection: 'row', padding: 10, borderBottomWidth: 2, borderColor: '#ccc' }}>
-      <Image source={item.image } style={{ width: 90, height: 90, borderRadius: 70, }} />
-      <View style={{ flex: 1, borderRightWidth: 2,  borderColor: '#ccc' }}>
-        <Text style={{ fontSize: 18, fontFamily:'serif', paddingVertical:30, paddingLeft: 10}}>{item.name}</Text>
-      </View>
-      {item.program.length > 0 && 
-        <View style={{ flex: 1, paddingLeft: 20, justifyContent: 'center', alignItems:'center', fontFamily:'serif'}}>
-          <Text>{item.program}</Text>
-        </View>
+  const navigation = useNavigation();
+  const [students, setStudents] = useState([]);
+  const [studentCount, setStudentCount] = useState(0);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const q = query(collection(db, 'students'), where('statusConnection', '==', 'online'));
+        const querySnapshot = await getDocs(q);
+        const studentsList = await Promise.all(querySnapshot.docs.map(async (doc) => {
+          const studentData = doc.data();
+          const storage = getStorage();
+          const profileImageRef = ref(storage, `images/${doc.id}`);
+          const profileImageUrl = await getDownloadURL(profileImageRef).catch(() => null);
+
+          return { id: doc.id, ...studentData, profileImageUrl };
+        }));
+        setStudents(studentsList);
+        setStudentCount(querySnapshot.size);
+      } catch (error) {
+        console.error("Error fetching students: ", error);
       }
-    </View>
-  );
+    };
+
+    fetchStudents();
+  }, []);
 
   return (
-    <View>
-
-      <View style={{ flexDirection: 'row', padding: 10, borderBottomWidth: 2, borderColor: '#ccc' }}>
-        <View style={{ flex: 1, borderRightWidth: 2,  borderColor: '#ccc', paddingRight: 90 }}>
-          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>STUDENTS</Text>
+    <SafeAreaView style={{ flex: 1, paddingTop: 20, backgroundColor: 'white' }}>
+      <Text style={styles.countText}>Total Students: {studentCount}</Text>
+      <ScrollView>
+        <View style={styles.container1}>
+          <View style={[styles.itemContainer, styles.border]}>
+            <Text style={{ color: 'teal' }}>NOM DU PROFILE</Text>
+          </View>
+          <View style={[styles.itemContainer, styles.border, styles.textContainer]}>
+            <Text style={{ color: 'teal' }}>FILIERE DE L'ETUDIANT</Text>
+          </View>
         </View>
 
-        <View style={{ flex: 1, paddingLeft: 10 }}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', paddingLeft: 10 }}>PROGRAMS</Text>
-        </View>
-
-      </View>
-
-    <FlatList
-      data={data}
-      renderItem={renderItem}
-      keyExtractor={item => item.id.toString()}
-    />
-
-    </View>
+        {students.map(student => (
+          <View key={student.id} style={styles.container}>
+            <View style={[styles.itemContainer, styles.border]}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('UsersGrade', {
+                    profileImageUrl: student.profileImageUrl || null,
+                    firstName: student.firstName,
+                    lastName: student.lastName,
+                    programChoice: student.programChoice
+                  });
+                }}
+                style={styles.boutonprofile}
+              >
+                {student.profileImageUrl ? (
+                  <Image source={{ uri: student.profileImageUrl }} style={styles.profile} />
+                ) : (
+                  <Image source={require('../Assets/checkStudents.jpg')} style={styles.profile} />
+                )}
+                <Text>{student.firstName} {student.lastName}</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.itemContainer, styles.border, styles.textContainer]}>
+              <Text>{student.programChoice}</Text>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
+    </SafeAreaView>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    marginHorizontal: 8,
+  },
+  itemContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  border: {
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+  },
+  textContainer: {
+    paddingLeft: 5,
+  },
+  profile: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  boutonprofile: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: 10,
+    paddingLeft: 5,
+  },
+  container1: {
+    flexDirection: 'row',
+    marginHorizontal: 8,
+    backgroundColor: '#D9D9D9'
+  },
+  countText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    paddingLeft: 20,
+    marginBottom: 10,
+  },
+});
+
 export default AllUsersConnected;

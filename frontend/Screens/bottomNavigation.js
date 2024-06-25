@@ -4,7 +4,7 @@ import User from '../Screens/user'
 import Calling from './calling';
 const Tab = createBottomTabNavigator();
 
-const BottomNavigation = () => {
+const BottomNavigationCustom = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen name="HomeStudents" component={HomeStudents} />
@@ -14,4 +14,4 @@ const BottomNavigation = () => {
   );
 }
 
-export default BottomNavigation
+export default BottomNavigationCustom

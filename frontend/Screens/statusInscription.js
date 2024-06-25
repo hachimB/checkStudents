@@ -21,12 +21,12 @@ const StatusInscription = () => {
       
       >
         <Tab.Screen
-        name="InscriptionStudents"
+        name="Inscription Students"
         component={InscriptionStudents}
         options={{headerShown :false}}
         />
         <Tab.Screen
-         name="InscriptionProfesors"
+         name="Inscription Professors"
           component={InscriptionProfessors}
           options={{headerShown :false}}
         />

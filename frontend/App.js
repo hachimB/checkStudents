@@ -18,7 +18,7 @@ import InscriptionStudents from './Screens/inscriptionStudents';
 import SignUp from "./Screens/Essai";
 import StatusConnection from './Screens/statusConnection';
 import StatusInscription from "./Screens/statusInscription";
-import UsersDetails from './Screens/usersDetails';
+import UsersGrade from './Screens/usersGrade';
 
 const Stack = createStackNavigator();
 
@@ -41,7 +41,7 @@ const App = () => {
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="StatusConnection" options={{ headerTitle: '' }} component={StatusConnection} />
         <Stack.Screen name="StatusInscription" options={{ headerTitle: '' }} component={StatusInscription} />
-        <Stack.Screen name="UsersDetails" options={{ headerTitle: '' }} component={UsersDetails} />
+        <Stack.Screen name="UsersGrade" options={{ headerTitle: '' }} component={UsersGrade} />
       </Stack.Navigator>
     </NavigationContainer>
   );

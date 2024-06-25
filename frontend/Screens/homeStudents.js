@@ -86,7 +86,7 @@ const HomeStudents = () => {
             <Text>AT THE MOMENT</Text>
             <Text>In classroom: {users.length}</Text>
           </View>
-          <Text>Date: {currentTime}</Text>
+          <Text>{currentTime}</Text>
         </View>
 
         <ScrollView horizontal contentContainerStyle={styles.scrollContainer}>
@@ -112,6 +112,9 @@ const HomeStudents = () => {
           <Text style={styles.cardText}>Reason</Text>
         </TouchableOpacity>
       </View>
+
+
+      
 
       <View style={styles.directiveContainer}>
         <View style={styles.administrerContainer} >
