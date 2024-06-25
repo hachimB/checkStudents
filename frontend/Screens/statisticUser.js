@@ -1,5 +1,5 @@
 import React from "react";
-import { View ,Text ,Image, StyleSheet} from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
 import { BarChart } from "react-native-gifted-charts";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -48,49 +48,48 @@ const DiagrammeStudent = () => {
             frontColor: '#91E3E3',
             sideColor: '#85E0E0',
             topColor: '#B0EAEB',
-          },
-    ]
+        },
+    ];
     return (
-        <SafeAreaView style={{flex:1,paddingTop:30,backgroundColor:'white'}}>
-        <View style={{flexDirection:'row',paddingLeft:10,}}>
-          <Image source={require('../Assets/image6.jpg')} style={styles.imageProfil} />
-          <View style={{paddingLeft:30,paddingTop:5}}>
-            <Text>Nom : Reason </Text>
-            <Text>Preom : Knowledge</Text>
-            <Text>Filière : ISI</Text>
-            <TouchableOpacity style={{flexDirection:'row'}}>
-              <MaterialCommunityIcons name="file-eye" size={20} color="#D33E43" />
-              <Text>voir les notes</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={{marginTop:40,}}>
-        <Text style={{paddingLeft:50,paddingBottom:20}}>Frequentation</Text>
-            <BarChart
-            showFractionalValue
-            showYAxisIndices
-            hideRules
-            noOfSections={4}
-            maxValue={6}
-            data={barData}
-            barWidth={25}
-            stepValue={1}
-            sideWidth={15}
-            isThreeD 
-            side="right"
-            />
-        </View>
+        <SafeAreaView style={{flex: 1, justifyContent: 'center', backgroundColor: 'white', alignItems: 'center'}}>
+            <View style={{flexDirection: 'row', paddingLeft: 10, marginTop: 20}}>
+                <Image source={require('../Assets/image6.jpg')} style={styles.imageProfil} />
+                <View style={{paddingLeft: 25, paddingTop: 5}}>
+                    <Text>Nom : Reason </Text>
+                    <Text>Preom : Knowledge</Text>
+                    <Text>Filière : ISI</Text>
+                    <TouchableOpacity style={{flexDirection: 'row'}}>
+                        <MaterialCommunityIcons name="file-eye" size={20} color="#D33E43" />
+                        <Text>voir les notes</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <View style={{paddingTop: 40, alignItems: 'center'}}>
+                <Text style={{paddingBottom: 20}}>Frequentation</Text>
+                <BarChart
+                    showFractionalValue
+                    showYAxisIndices
+                    hideRules
+                    noOfSections={4}
+                    maxValue={6}
+                    data={barData}
+                    barWidth={25}
+                    stepValue={1}
+                    sideWidth={15}
+                    isThreeD
+                    side="right"
+                />
+            </View>
         </SafeAreaView>
     );
 }
 
-const styles =StyleSheet.create({
-  imageProfil:{
-    width: 80,
-    height: 80,
-    borderRadius: 50,
-  }
-})
-
+const styles = StyleSheet.create({
+    imageProfil: {
+        width: 80,
+        height: 80,
+        borderRadius: 50,
+    },
+});
 
 export default DiagrammeStudent;
