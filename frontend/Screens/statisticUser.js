@@ -64,8 +64,8 @@ const DiagrammeStudent = () => {
                     </TouchableOpacity>
                 </View>
             </View>
-            <View style={{paddingTop: 40, alignItems: 'center'}}>
-                <Text style={{paddingBottom: 20}}>Frequentation</Text>
+            <View style={{paddingTop: 40,justifyContent:'center', marginLeft:-30,}}>
+                <Text style={{paddingBottom: 20,paddingLeft:30,}}>Frequentation</Text>
                 <BarChart
                     showFractionalValue
                     showYAxisIndices
