@@ -5,8 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 import { auth, db } from '../Config/firebaseConfig';
 import { collection, query, where, onSnapshot, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
+import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import BottomNavigationCustom from './bottomNavigation';
+// import BottomNavigationCustom from './bottomNavigation';
 
 
 const HomeStudents = () => {
@@ -122,7 +123,18 @@ const HomeStudents = () => {
         </View>
         <Image source={require('../Assets/administrez.png')} style={styles.directiveImage} />
       </View>
-      <BottomNavigationCustom />
+      <View style={{ flexDirection: 'row', justifyContent:'space-between', paddingTop: 10, paddingHorizontal: 10 }}>
+        <TouchableOpacity>
+        <AntDesign name="home" size={24} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity>
+        <FontAwesome5 name="user-circle" size={24} color="black" />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Image source={require('../Assets/increase.png')} style={{width: 24, height: 24}} />
+        </TouchableOpacity>
+      </View>
+      {/* <BottomNavigationCustom /> */}
     </SafeAreaView>
   );
 };
