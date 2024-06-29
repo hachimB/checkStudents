@@ -332,7 +332,7 @@ import * as Sharing from 'expo-sharing';
 const HomeStudents = () => {
   const generatePDF = async () => {
     try {
-      const response = await axios.post('http://192.168.1.8:3000/generate-pdf');
+      const response = await axios.post('http://yourIpAdresse:3000/generate-pdf');
       if (response.status === 200) {
         const pdfBase64 = response.data.pdfBase64;
         const pdfUri = FileSystem.documentDirectory + 'checkStudents.pdf';
