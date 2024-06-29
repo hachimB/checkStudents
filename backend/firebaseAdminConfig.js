@@ -1,6 +1,6 @@
 // firebaseAdminConfig.js
 const admin = require('firebase-admin');
-const serviceAccount = require("C:\\Users\\HachimB\\Desktop\\Projects\\firebase-service-account.json");
+const serviceAccount = require("./Config/firebase-service-account.json");
 
 // Initialize Firebase Admin with service account
 admin.initializeApp({
