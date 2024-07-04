@@ -17,8 +17,8 @@ const DrawerProfessors = () => {
   return (
     <Drawer.Navigator drawerContent={(props) => <DrawerHeader {...props} />}>
       <Drawer.Screen
-        name="HomeStudents"
-        component={HomeStudents}
+        name="HomeProfessors"
+        component={HomeProfessors}
         options={{
           headerTitle :'',
           drawerIcon: ({ color }) => (

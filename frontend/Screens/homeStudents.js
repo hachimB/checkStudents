@@ -332,7 +332,7 @@ import * as Sharing from 'expo-sharing';
 const HomeStudents = () => {
   const generatePDF = async () => {
     try {
-      const response = await axios.post('http://yourIpAdresse:3000/generate-pdf');
+      const response = await axios.post('http://192.168.145.248:3000/generate-pdf');
       if (response.status === 200) {
         const pdfBase64 = response.data.pdfBase64;
         const pdfUri = FileSystem.documentDirectory + 'checkStudents.pdf';
@@ -454,18 +454,24 @@ const HomeStudents = () => {
           <Text style={{ color: 'white' }}>Administrez en click</Text>
         </View>
         <Image source={require('../Assets/administrez.png')} style={styles.directiveImage} />
+      
       </View>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, paddingHorizontal: 10 }}>
+     <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'flex-end'}}>
+
+     <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, paddingHorizontal: 10 }}>
         <TouchableOpacity>
           <AntDesign name="home" size={24} color="black" />
         </TouchableOpacity>
+        <View>
+          <Image source={require('../Assets/increase.png')} style={{ width: 24, height: 24 }} />
+        </View>
         <TouchableOpacity>
           <FontAwesome5 name="user-circle" size={24} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={generatePDF}>
-          <Image source={require('../Assets/increase.png')} style={{ width: 24, height: 24 }} />
-        </TouchableOpacity>
       </View>
+      </View> 
+
+     
       {/* <BottomNavigationCustom /> */}
     </SafeAreaView>
   );

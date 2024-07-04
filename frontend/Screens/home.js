@@ -16,13 +16,13 @@ const Home = () => {
                     <TouchableOpacity 
                     style={{ justifyContent:'center',alignItems:'center',height: 40, width: 90, borderRadius:5, borderWidth: 1, borderColor: '#D9D9D9'}}
                     onPress={() => navigation.navigate('StatusInscription')}>
-                        <Text> Sign In</Text>
+                        <Text> Sign Up</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigation.navigate('StatusConnection')}
                     style={{justifyContent:'center',alignItems:'center',height: 40, width: 90, borderRadius:5, borderWidth: 1, borderColor: '#D9D9D9'
                     
                     }}>
-                        <Text> Sign Up</Text>
+                        <Text> Sign In</Text>
                     </TouchableOpacity>
                 </View>
                 <CarouselCustom />
